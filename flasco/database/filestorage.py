@@ -1,4 +1,3 @@
-from fastapi import UploadFile
 from supabase import create_client
 from flasco.settings import settings
 
@@ -13,9 +12,8 @@ class SupabaseStorage:
 
     async def upload(
             self,
-            file: UploadFile,
             file_name: str,
-            content_type: str = None
+            contents
     ):
         """
         Upload a file to Supabase storage.
@@ -23,13 +21,12 @@ class SupabaseStorage:
         :param file_name: Name of the file in Supabase storage.
         """
 
-        contents = file.read()
         response = self.client.storage.from_(self.bucket).upload(
-            path=f"videoaulas/{file_name}",
-            file=contents,
+            f"videoaulas/{file_name}",
+            contents,
             file_options={
-                "content_type": "application/octet-stream",
                 "upsert": "true",
+                "content-type": "video/mp4",
             }
         )
         return response

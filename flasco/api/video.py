@@ -9,13 +9,14 @@ router = APIRouter(prefix="/v1/video", tags=["video"])
 @router.post("/upload")
 async def upload_video(
     request: Request,
+    video_name: str = File(...),
     video_file: UploadFile = File(...),
     usecase: VideoUploadUseCase = Depends(video_upload_usecase)
 ):
+    contents = await video_file.read()
     await usecase.execute(
-        video_file=video_file.file,
-        video_name=video_file.filename,
-        content_type=video_file.content_type,
+        video_name=video_name,
+        contents=contents,
     )
     return {
         "status": "success",
