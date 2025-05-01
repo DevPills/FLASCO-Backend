@@ -1,6 +1,8 @@
+from http import HTTPStatus
 from fastapi import APIRouter, Depends, File, Request, UploadFile
 
-from flasco.dependencies import video_upload_usecase
+from flasco.dependencies import video_delete_usecase, video_upload_usecase
+from flasco.usecases.video_delete_usecase import DeleteVideoUseCase
 from flasco.usecases.video_upload import VideoUploadUseCase
 
 router = APIRouter(prefix="/v1/video", tags=["video"])
@@ -23,10 +25,18 @@ async def upload_video(
         "filename": video_file.filename
     }
 
-# @router.delete("/delete")
-# async def delete_video(
-#     request: Request,
-#     title: str,
-#     file: DeleteFile
-# ):
-#     ...
+@router.delete("/delete", status_code=HTTPStatus.OK)
+async def delete_video(
+    request: Request,
+    file_name: str = '',
+    paths: str = '',
+    usecase: DeleteVideoUseCase = Depends(video_delete_usecase)
+):
+    await usecase.execute(
+        video_name=file_name,
+        paths=paths
+    )
+    return {
+        "status": "success",
+        "deletedvideo": file_name
+    }
