@@ -1,7 +1,11 @@
-from fastapi import APIRouter, Depends, File, Request, UploadFile
+from fastapi import APIRouter, Depends, File, Request, UploadFile, Query
 
-from flasco.dependencies import video_upload_usecase
+from flasco.dependencies import (
+    video_upload_usecase,
+    video_list_usecase
+)
 from flasco.usecases.video_upload import VideoUploadUseCase
+from flasco.usecases.video_list import VideoListUseCase
 
 router = APIRouter(prefix="/v1/video", tags=["video"])
 
@@ -30,3 +34,16 @@ async def upload_video(
 #     file: DeleteFile
 # ):
 #     ...
+@router.get("/list")
+async def list_videos(
+    request: Request,
+    limit: int | None = Query(None, ge=1, description="Máximo de itens"),
+    offset: int = Query(0, ge=0, description="Deslocamento inicial"),
+    usecase: VideoListUseCase = Depends(video_list_usecase)
+):
+    videos = await usecase.execute(limit=limit, offset=offset)
+    return {
+        "status": "success",
+        "items": len(videos),
+        "videos": videos
+    }
