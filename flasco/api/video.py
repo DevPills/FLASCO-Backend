@@ -28,8 +28,8 @@ async def upload_video(
 @router.delete("/delete", status_code=HTTPStatus.OK)
 async def delete_video(
     request: Request,
-    file_name: str = '',
-    paths: str = '',
+    file_name: str = File(...),
+    paths: str = File(...),
     usecase: DeleteVideoUseCase = Depends(video_delete_usecase)
 ):
     await usecase.execute(
@@ -38,5 +38,6 @@ async def delete_video(
     )
     return {
         "status": "success",
-        "deletedvideo": file_name
+        "deletedvideo": file_name,
+        "paths": paths
     }
