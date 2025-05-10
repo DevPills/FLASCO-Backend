@@ -4,7 +4,7 @@ from flasco.settings import settings
 engine = create_async_engine(settings.DATABASE_URL, echo=True)
 
 DBsession = async_sessionmaker(
-    sync_session_class=engine.sync_session,
+    bind=engine,
     expire_on_commit=False
 )
 
