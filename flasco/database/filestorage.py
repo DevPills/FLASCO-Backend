@@ -14,7 +14,6 @@ class SupabaseStorage:
     async def upload(
             self,
             file_name: str,
-            autor_file: str,
             contents
     ):
         """

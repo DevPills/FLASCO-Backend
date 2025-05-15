@@ -11,14 +11,12 @@ async def upload_video(
     request: Request,
     video_name: str = File(...),
     video_file: UploadFile = File(...),
-    autor_file: str = File(...),
     usecase: VideoUploadUseCase = Depends(video_upload_usecase)
 ):
     contents = await video_file.read()
     response = await usecase.execute(
         video_name=video_name,
         contents=contents,
-        autor_file=autor_file
     )
     return response
 
