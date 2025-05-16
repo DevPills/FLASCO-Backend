@@ -34,9 +34,3 @@ def video_delete_usecase() -> DeleteVideoUseCase:
     return DeleteVideoUseCase(
         supabase_service=get_supabase_service()
     )
-
-
-def video_delete_usecase() -> DeleteVideoUseCase:
-    return DeleteVideoUseCase(
-        supabase_service=get_supabase_service()
-    )
