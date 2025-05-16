@@ -1,6 +1,7 @@
 from typing import Any
 from supabase import create_client
 from flasco.settings import settings
+import uuid
 
 url: str = settings.SUPABASE_URL
 key: str = settings.SUPABASE_ANON_KEY
@@ -21,9 +22,11 @@ class SupabaseStorage:
         :param file_path: Path to the file to upload.
         :param file_name: Name of the file in Supabase storage.
         """
+        unique_name = uuid.uuid4()
 
         response = self.client.storage.from_(self.bucket).upload(
             f"videoaulas/{file_name}",
+            f"videoaulas/{unique_name}",
             contents,
             file_options={
                 "upsert": "true",

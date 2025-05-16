@@ -16,14 +16,11 @@ async def upload_video(
     usecase: VideoUploadUseCase = Depends(video_upload_usecase)
 ):
     contents = await video_file.read()
-    await usecase.execute(
+    response = await usecase.execute(
         video_name=video_name,
         contents=contents,
     )
-    return {
-        "status": "success",
-        "filename": video_file.filename
-    }
+    return response
 
 @router.delete("/delete", status_code=HTTPStatus.OK)
 async def delete_video(
