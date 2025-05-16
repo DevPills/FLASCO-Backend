@@ -1,3 +1,4 @@
+from typing import Any
 from supabase import create_client
 from flasco.settings import settings
 import uuid
@@ -24,11 +25,23 @@ class SupabaseStorage:
         unique_name = uuid.uuid4()
 
         response = self.client.storage.from_(self.bucket).upload(
+            f"videoaulas/{file_name}",
             f"videoaulas/{unique_name}",
             contents,
             file_options={
                 "upsert": "true",
                 "content-type": "video/mp4",
             }
+        )
+        return response
+    
+
+    async def remove(
+           self, 
+           file_name: str,
+           paths: str
+    ):
+        response = self.client.storage.from_(self.bucket).remove(
+            [f"{paths}{file_name}"]
         )
         return response
