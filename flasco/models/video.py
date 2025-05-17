@@ -1,15 +1,15 @@
 from uuid import uuid4, UUID
 from datetime import time
 from sqlalchemy import Integer, String, Time, Uuid
-from sqlalchemy.orm import registry, mapped_column, Mapped
+from sqlalchemy.orm import registry, mapped_column, Mapped, relationship
 
 
-tabble_registry = registry()
+table_registry = registry()
 
 
-@tabble_registry.mapped_as_dataclass
+@table_registry.mapped_as_dataclass
 class Video:
-    __tablename__ = "videoaula"
+    __tablename__ = "video"
 
     nome: Mapped[str] = mapped_column(
         String(255),
@@ -39,3 +39,18 @@ class Video:
         Integer,
         default=0,
     )
+
+    modulo_associado: Mapped[list["ArmazenaUm"]] = relationship(
+        back_populates="video",
+        default_factory=list
+    )
+
+    comentarios: Mapped[list["Comentario"]] = relationship(
+        back_populates="video",
+        cascade="all, delete-orphan",
+        default_factory=list
+    )
+
+
+
+
