@@ -37,3 +37,11 @@ class VideoRepository:
         
         
         return deleted_video
+    
+    async def get_video_by_id(self, video_id: str) -> T:
+        query = select(Video).where(Video.id_video == video_id)
+        result = await self.db_session.execute(query)
+        video = result.scalars().first()
+        if not video:
+            return None
+        return video
