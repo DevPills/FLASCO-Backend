@@ -30,12 +30,7 @@ async def upload_video(
     )
     return response
 
-<<<<<<< HEAD
 @router.delete("/delete/{video_id}", status_code=HTTPStatus.OK)
-=======
-
-@router.delete("/delete", status_code=HTTPStatus.OK)
->>>>>>> main
 async def delete_video(
     request: Request,
     video_id: str,
