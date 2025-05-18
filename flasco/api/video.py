@@ -1,10 +1,17 @@
 from http import HTTPStatus
 import uuid
 from fastapi import APIRouter, Depends, File, Request, UploadFile
+from fastapi.responses import StreamingResponse
 
-from flasco.dependencies import video_delete_usecase, video_upload_usecase
+from flasco.dependencies import (
+    get_video_usecase,
+    video_delete_usecase,
+    video_upload_usecase
+)
 from flasco.usecases.video_delete_usecase import DeleteVideoUseCase
+from flasco.usecases.video_get import GetVideoUseCase
 from flasco.usecases.video_upload import VideoUploadUseCase
+from flasco.gateways.video_stream import VideoStreamGateway
 
 router = APIRouter(prefix="/v1/video", tags=["video"])
 
@@ -23,7 +30,12 @@ async def upload_video(
     )
     return response
 
+<<<<<<< HEAD
 @router.delete("/delete/{video_id}", status_code=HTTPStatus.OK)
+=======
+
+@router.delete("/delete", status_code=HTTPStatus.OK)
+>>>>>>> main
 async def delete_video(
     request: Request,
     video_id: str,
@@ -41,3 +53,18 @@ async def delete_video(
         "deletedvideo": file_name,
         "paths": paths
     }
+
+
+@router.get("/get-video/{video_id}", status_code=HTTPStatus.OK)
+async def get_video_url(
+    request: Request,
+    video_id: str,
+    get_video_usecase: GetVideoUseCase = Depends(get_video_usecase)
+):
+    response = await get_video_usecase.execute(
+        video_id=video_id
+    )
+    return StreamingResponse(
+        VideoStreamGateway.start_stream(video_url=response),
+        media_type="video/mp4"
+    )

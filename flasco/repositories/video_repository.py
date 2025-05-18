@@ -1,6 +1,7 @@
 from http import HTTPStatus
 from fastapi import HTTPException
 from sqlalchemy import delete, select
+from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from typing import TypeVar
 
@@ -36,4 +37,3 @@ class VideoRepository:
         
         
         return deleted_video
-
