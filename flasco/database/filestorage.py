@@ -25,7 +25,6 @@ class SupabaseStorage:
 
         response = self.client.storage.from_(self.bucket).upload(
             f"videoaulas/{file_name}",
-            f"videoaulas/{unique_name}",
             contents,
             file_options={
                 "upsert": "true",

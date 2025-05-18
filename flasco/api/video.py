@@ -1,4 +1,5 @@
 from http import HTTPStatus
+import uuid
 from fastapi import APIRouter, Depends, File, Request, UploadFile
 from fastapi.responses import StreamingResponse
 
@@ -29,17 +30,18 @@ async def upload_video(
     )
     return response
 
-
-@router.delete("/delete", status_code=HTTPStatus.OK)
+@router.delete("/delete/{video_id}", status_code=HTTPStatus.OK)
 async def delete_video(
     request: Request,
+    video_id: str,
     file_name: str = File(...),
     paths: str = File(...),
-    usecase: DeleteVideoUseCase = Depends(video_delete_usecase)
+    usecase: DeleteVideoUseCase = Depends(video_delete_usecase),
 ):
     await usecase.execute(
         video_name=file_name,
-        paths=paths
+        paths=paths,
+        video_id=video_id
     )
     return {
         "status": "success",
