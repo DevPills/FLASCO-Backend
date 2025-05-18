@@ -30,7 +30,11 @@ def video_upload_usecase(
     )
 
 
-def video_delete_usecase() -> DeleteVideoUseCase:
+def video_delete_usecase(
+    video_repository: VideoRepository = Depends(get_video_repository),
+    supabase_service: SupabaseStorage = Depends(get_supabase_service),
+) -> DeleteVideoUseCase:
     return DeleteVideoUseCase(
-        supabase_service=get_supabase_service()
+        supabase_service=supabase_service,
+        video_respository=video_repository
     )
