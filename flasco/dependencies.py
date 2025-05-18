@@ -3,6 +3,7 @@ from flasco.database.filestorage import SupabaseStorage
 from flasco.database.database import get_async_session
 from flasco.repositories.video_repository import VideoRepository
 from flasco.usecases.video_delete_usecase import DeleteVideoUseCase
+from flasco.usecases.video_get import GetVideoUseCase
 from flasco.usecases.video_upload import VideoUploadUseCase
 from sqlalchemy.ext.asyncio import AsyncSession
 from flasco.settings import settings
@@ -33,4 +34,14 @@ def video_upload_usecase(
 def video_delete_usecase() -> DeleteVideoUseCase:
     return DeleteVideoUseCase(
         supabase_service=get_supabase_service()
+    )
+
+
+def get_video_usecase(
+    video_repository: VideoRepository = Depends(get_video_repository),
+    supabase_service: SupabaseStorage = Depends(get_supabase_service),
+) -> GetVideoUseCase:
+    return GetVideoUseCase(
+        video_repository=video_repository,
+        supabase_service=supabase_service
     )

@@ -1,4 +1,3 @@
-from typing import Any
 from supabase import create_client
 from flasco.settings import settings
 import uuid
@@ -34,14 +33,24 @@ class SupabaseStorage:
             }
         )
         return response
-    
 
     async def remove(
-           self, 
+           self,
            file_name: str,
            paths: str
     ):
         response = self.client.storage.from_(self.bucket).remove(
             [f"{paths}{file_name}"]
         )
+        return response
+
+    async def get_video_url(self, video_url: str):
+        """
+        Get the public URL of a file in Supabase storage.
+        :param file_name: Name of the file in Supabase storage.
+        :return: Public URL of the file.
+        """
+        response = self.client.storage.from_(
+            self.bucket
+        ).get_public_url(video_url)
         return response
