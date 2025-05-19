@@ -45,3 +45,11 @@ class VideoRepository:
         if not video:
             return None
         return video
+
+    async def get_all_videos(self) -> list[T]:
+        query = select(Video)
+        result = await self.db_session.execute(query)
+        videos = result.scalars().all()
+        if not videos:
+            return []
+        return videos
