@@ -6,21 +6,17 @@ table_registry = registry()
 
 
 @table_registry.mapped_as_dataclass
-class ClassUm:
+class CurteUm:
     __tablename__ = "curte_um"
 
-    id_video: Mapped[UUID] = mapped_column(
-        ForeignKey("video.id_video"),
-        primary_key=True
-    )
     id_usuario: Mapped[UUID] = mapped_column(
         ForeignKey("usuario.id_usuario"),
-        primary_key=True
-    )
+        primary_key=True)
+    id_video: Mapped[UUID] = mapped_column(
+        ForeignKey("video.id_video"),
+        primary_key=True)
 
-    video: Mapped["Video"] = relationship(
-        back_populates="usuario_associado"
-    )
     usuario: Mapped["Usuario"] = relationship(
-        back_populates="video_associado"
-    )
+        back_populates="videos_curtidos")
+    video: Mapped["Video"] = relationship(
+        back_populates="curtidas")

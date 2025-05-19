@@ -1,6 +1,5 @@
 from uuid import UUID
-from sqlalchemy import ForeignKey
-from sqlalchemy import Integer
+from sqlalchemy import ForeignKey, Integer
 from sqlalchemy.orm import registry, mapped_column, Mapped, relationship
 
 table_registry = registry()
@@ -12,21 +11,16 @@ class ArmazenaUm:
 
     id_video: Mapped[UUID] = mapped_column(
         ForeignKey("video.id_video"),
-        primary_key=True
-        )
+        primary_key=True)
     id_modulo: Mapped[UUID] = mapped_column(
         ForeignKey("modulo.id_modulo"),
-        primary_key=True
-        )
-    posicao: Mapped[Integer] = mapped_column(
+        primary_key=True)
+    posicao: Mapped[int] = mapped_column(
         Integer,
         default=0,
-        nullable=False
-    )
+        nullable=False)
 
     video: Mapped["Video"] = relationship(
-        back_populates="modulo_associado"
-    )
+        back_populates="modulos_associados")
     modulo: Mapped["Modulo"] = relationship(
-        back_populates="video_associado"
-    )
+        back_populates="videos_associados")
