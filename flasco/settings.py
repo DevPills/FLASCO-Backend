@@ -6,6 +6,8 @@ class Settings(BaseSettings):
     SUPABASE_URL: str
     SUPABASE_ANON_KEY: str
     SUPABASE_BUCKET: str
+    SECRET: str
+    ALGORITHM: str
 
     model_config = {
         "env_file": ".env",
