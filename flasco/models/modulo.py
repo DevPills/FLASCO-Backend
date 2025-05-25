@@ -10,18 +10,25 @@ table_registry = registry()
 class Modulo(TimestampMixin):
     __tablename__ = "modulo"
 
-    id_modulo: Mapped[UUID] = mapped_column(
-        Uuid(32),
-        primary_key=True,
-        default_factory=uuid4
-    )
     nome: Mapped[str] = mapped_column(
         String(255),
         nullable=False)
     descricao: Mapped[str] = mapped_column(
         String(500),
         nullable=True)
+    id_professor_criador: Mapped[UUID] = mapped_column(
+        ForeignKey("professor.id_usuario"), 
+        nullable=False 
+    )
+    id_modulo: Mapped[UUID] = mapped_column(
+        Uuid(32),
+        primary_key=True,
+        default_factory=uuid4
+    )
 
+    professor_criador: Mapped["Professor"] = relationship(
+            back_populates="modulos_criados" # O nome do relacionamento de volta em Professor
+        )
     videos_associados: Mapped[list["ArmazenaUm"]] = relationship(
         back_populates="modulo",
         default_factory=list

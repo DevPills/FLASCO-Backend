@@ -13,7 +13,7 @@ class CurteUm:
         ForeignKey("usuario.id_usuario"),
         primary_key=True)
     id_video: Mapped[UUID] = mapped_column(
-        ForeignKey("video.id_video"),
+        ForeignKey("videoaula.id_video"),
         primary_key=True)
 
     usuario: Mapped["Usuario"] = relationship(

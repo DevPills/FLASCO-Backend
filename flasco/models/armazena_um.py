@@ -10,7 +10,7 @@ class ArmazenaUm:
     __tablename__ = "armazena_um"
 
     id_video: Mapped[UUID] = mapped_column(
-        ForeignKey("video.id_video"),
+        ForeignKey("videoaula.id_video"),
         primary_key=True)
     id_modulo: Mapped[UUID] = mapped_column(
         ForeignKey("modulo.id_modulo"),

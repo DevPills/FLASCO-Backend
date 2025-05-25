@@ -1,11 +1,9 @@
 import enum
 from uuid import UUID
-from sqlalchemy import String, Enum, ForeignKey
-from sqlalchemy.orm import registry, mapped_column, Mapped, relationship
-from flasco.models.base_mixin import TimestampMixin
-
-table_registry = registry()
-
+from sqlalchemy import Enum, ForeignKey
+from sqlalchemy.orm import mapped_column, Mapped, relationship
+from flasco.models import table_registry
+from flasco.models.usuario import Usuario
 
 class CursoEnum(enum.Enum):
     TECNICO_DE_INFORMATICA = "Técnico de Informática"
@@ -16,28 +14,22 @@ class CursoEnum(enum.Enum):
     ENGENHARIA_DE_INFORMACAO = "Engenharia de Informação"
     CIENCIA_DA_COMPUTACAO = "Ciência da Computação"
 
-
 @table_registry.mapped_as_dataclass
-class Aluno(TimestampMixin):  # Se quiser timestamps, mantenha
+class Aluno(Usuario):
     __tablename__ = "aluno"
 
     id_usuario: Mapped[UUID] = mapped_column(
         ForeignKey("usuario.id_usuario"),
-        primary_key=True,
+        primary_key=True
     )
-    nome: Mapped[str] = mapped_column(
-        String(255),
-        nullable=False)
-    email: Mapped[str] = mapped_column(
-        String(255),
-        nullable=False,
-        unique=True)
-    instituicao: Mapped[str] = mapped_column(
-        String(255),
-        nullable=True)
+
     curso: Mapped[CursoEnum | None] = mapped_column(
-        Enum(CursoEnum,name="curso_enum", native_enum=True),
+        Enum(CursoEnum, name="curso_enum", native_enum=True),
         nullable=True
+    )
+
+    usuario: Mapped["Usuario"] = relationship(
+        back_populates="aluno",
     )
 
     modulos_matriculados: Mapped[list["SeMatricula"]] = relationship(

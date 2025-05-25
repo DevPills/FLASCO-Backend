@@ -10,10 +10,6 @@ table_registry = registry()
 class Comentario(TimestampMixin):
     __tablename__ = "comentario"
 
-    id_comentario: Mapped[UUID] = mapped_column(
-        Uuid(32),
-        primary_key=True,
-        default_factory=uuid4)
     conteudo: Mapped[str] = mapped_column(
         String(400),
         nullable=False)
@@ -21,12 +17,15 @@ class Comentario(TimestampMixin):
         ForeignKey("usuario.id_usuario"),
         nullable=False)
     id_video: Mapped[UUID] = mapped_column(
-        ForeignKey("video.id_video"),
+        ForeignKey("videoaula.id_video"),
         nullable=False)
     id_resposta: Mapped[UUID | None] = mapped_column(
         ForeignKey("comentario.id_comentario"),
-        nullable=True
     )
+    id_comentario: Mapped[UUID] = mapped_column(
+        Uuid(32),
+        primary_key=True,
+        default_factory=uuid4)
 
     usuario: Mapped["Usuario"] = relationship(
         back_populates="comentarios")
@@ -36,6 +35,7 @@ class Comentario(TimestampMixin):
         remote_side=[id_comentario],
         back_populates="respostas"
     )
+    
     respostas: Mapped[list["Comentario"]] = relationship(
         back_populates="resposta_a",
         cascade="all, delete-orphan",

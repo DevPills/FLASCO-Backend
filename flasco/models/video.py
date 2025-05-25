@@ -9,18 +9,13 @@ table_registry = registry()
 
 @table_registry.mapped_as_dataclass
 class Video(TimestampMixin):
-    __tablename__ = "video"
+    __tablename__ = "videoaula"
 
-    id_video: Mapped[UUID] = mapped_column(
-        Uuid(32),
-        primary_key=True,
-        default_factory=uuid4)
     nome: Mapped[str] = mapped_column(
         String(255),
         nullable=False)
     descricao: Mapped[str] = mapped_column(
-        String(500), 
-        nullable=True)
+        String(500))
     duracao: Mapped[time] = mapped_column(
         Time, 
         nullable=False)
@@ -57,3 +52,7 @@ class Video(TimestampMixin):
         cascade="all, delete-orphan",
         default_factory=list
     )
+    id_video: Mapped[UUID] = mapped_column(
+        Uuid(32),
+        primary_key=True,
+        default_factory=uuid4)

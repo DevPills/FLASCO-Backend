@@ -10,10 +10,6 @@ table_registry = registry()
 class Anexo(TimestampMixin):
     __tablename__ = "anexo"
 
-    id_anexo: Mapped[UUID] = mapped_column(
-        Uuid(32),
-        primary_key=True,
-        default_factory=uuid4)
     nome: Mapped[str] = mapped_column(
         String(255),
         nullable=False)
@@ -25,8 +21,14 @@ class Anexo(TimestampMixin):
         nullable=False,
         unique=True)
     id_video: Mapped[UUID] = mapped_column(
-        ForeignKey("video.id_video"),
+        ForeignKey("videoaula.id_video"),
         nullable=False)
+    id_anexo: Mapped[UUID] = mapped_column(
+        Uuid(32),
+        primary_key=True,
+        default_factory=uuid4)
+
 
     video: Mapped["Video"] = relationship(
         back_populates="anexos")
+    
