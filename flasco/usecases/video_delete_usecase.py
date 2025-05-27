@@ -19,7 +19,7 @@ class DeleteVideoUseCase:
     ):
         self.video_service = supabase_service
         self.video_respository = video_respository
-    
+
     async def execute(self, video_name, paths, video_id):
         filestorage_delete = await self.video_service.remove(
             file_name=video_name,
@@ -30,11 +30,11 @@ class DeleteVideoUseCase:
             raise HTTPException(
                 status_code=HTTPStatus.NOT_FOUND, detail="Video nao existe"
             )
-        
+
         database_delete = await self.video_respository.delete_video_by_id(
             video_id=video_id
-        ) 
-        
+        )
+
         if not database_delete:
             raise HTTPException(
                 status_code=HTTPStatus.NOT_FOUND, detail="Video nao existe"
