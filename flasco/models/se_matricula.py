@@ -1,12 +1,9 @@
 from uuid import UUID
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import registry, mapped_column, Mapped, relationship
+from flasco.models.base import Base
 
-table_registry = registry()
-
-
-@table_registry.mapped_as_dataclass
-class SeMatricula:
+class SeMatricula(Base):
     __tablename__ = "se_matricula"
 
     id_aluno: Mapped[UUID] = mapped_column(

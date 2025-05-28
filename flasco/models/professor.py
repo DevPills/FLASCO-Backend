@@ -1,8 +1,7 @@
 import enum
 from uuid import UUID
 from sqlalchemy import Enum, ForeignKey
-from sqlalchemy.orm import mapped_column, Mapped, relationship
-from flasco.models import table_registry  
+from sqlalchemy.orm import mapped_column, Mapped, relationship 
 from flasco.models.usuario import Usuario
 
 class FormacaoEnum(enum.Enum):
@@ -10,7 +9,7 @@ class FormacaoEnum(enum.Enum):
     DOUTOR = "Doutor"
     PHD = "Ph.D."
 
-@table_registry.mapped_as_dataclass
+
 class Professor(Usuario):
     __tablename__ = "professor"
 
@@ -27,7 +26,6 @@ class Professor(Usuario):
     modulos_criados: Mapped[list["Modulo"]] = relationship(
         back_populates="professor_criador",
         cascade="all, delete-orphan", 
-        default_factory=list
     )
 
     usuario: Mapped["Usuario"] = relationship(

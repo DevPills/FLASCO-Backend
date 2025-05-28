@@ -1,13 +1,9 @@
 from uuid import uuid4, UUID
 from sqlalchemy import String, Uuid, ForeignKey
 from sqlalchemy.orm import registry, mapped_column, Mapped, relationship
-from flasco.models.base_mixin import TimestampMixin
-
-table_registry = registry()
-
-
-@table_registry.mapped_as_dataclass
-class Comentario(TimestampMixin):
+from flasco.models.base_timestamp import TimestampBase
+from flasco.models.base import Base
+class Comentario(TimestampBase, Base):
     __tablename__ = "comentario"
 
     conteudo: Mapped[str] = mapped_column(
@@ -25,7 +21,7 @@ class Comentario(TimestampMixin):
     id_comentario: Mapped[UUID] = mapped_column(
         Uuid(32),
         primary_key=True,
-        default_factory=uuid4)
+        default=uuid4)
 
     usuario: Mapped["Usuario"] = relationship(
         back_populates="comentarios")
@@ -39,5 +35,4 @@ class Comentario(TimestampMixin):
     respostas: Mapped[list["Comentario"]] = relationship(
         back_populates="resposta_a",
         cascade="all, delete-orphan",
-        default_factory=list
     )

@@ -2,7 +2,6 @@ import enum
 from uuid import UUID
 from sqlalchemy import Enum, ForeignKey
 from sqlalchemy.orm import mapped_column, Mapped, relationship
-from flasco.models import table_registry
 from flasco.models.usuario import Usuario
 
 class CursoEnum(enum.Enum):
@@ -14,7 +13,6 @@ class CursoEnum(enum.Enum):
     ENGENHARIA_DE_INFORMACAO = "Engenharia de Informação"
     CIENCIA_DA_COMPUTACAO = "Ciência da Computação"
 
-@table_registry.mapped_as_dataclass
 class Aluno(Usuario):
     __tablename__ = "aluno"
 
@@ -35,5 +33,4 @@ class Aluno(Usuario):
     modulos_matriculados: Mapped[list["SeMatricula"]] = relationship(
         back_populates="aluno",
         cascade="all, delete-orphan",
-        default_factory=list
     )
