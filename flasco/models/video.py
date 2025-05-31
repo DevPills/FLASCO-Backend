@@ -2,13 +2,11 @@ from uuid import uuid4, UUID
 from datetime import time
 from sqlalchemy import Integer, String, Time, Uuid, ForeignKey
 from sqlalchemy.orm import registry, mapped_column, Mapped, relationship
-from flasco.models.base_mixin import TimestampMixin
+from flasco.models.base_timestamp import TimestampBase
+from flasco.models.base import Base
 
-table_registry = registry()
 
-
-@table_registry.mapped_as_dataclass
-class Video(TimestampMixin):
+class Video(Base, TimestampBase):
     __tablename__ = "videoaula"
 
     nome: Mapped[str] = mapped_column(
@@ -30,29 +28,25 @@ class Video(TimestampMixin):
         default=0)
 
     modulos_associados: Mapped[list["ArmazenaUm"]] = relationship(
-        back_populates="video", default_factory=list
+        back_populates="video"
     )
     comentarios: Mapped[list["Comentario"]] = relationship(
         back_populates="video",
         cascade="all, delete-orphan",
-        default_factory=list
     )
     curtidas: Mapped[list["CurteUm"]] = relationship(
         back_populates="video",
         cascade="all, delete-orphan",
-        default_factory=list
     )
     favoritos: Mapped[list["FavoritaUm"]] = relationship(
         back_populates="video",
         cascade="all, delete-orphan",
-        default_factory=list
     )
     anexos: Mapped[list["Anexo"]] = relationship(
         back_populates="video",
         cascade="all, delete-orphan",
-        default_factory=list
     )
     id_video: Mapped[UUID] = mapped_column(
         Uuid(32),
         primary_key=True,
-        default_factory=uuid4)
+        default=uuid4)

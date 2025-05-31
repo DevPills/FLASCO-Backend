@@ -1,12 +1,9 @@
 from uuid import UUID
 from sqlalchemy import ForeignKey, Integer
-from sqlalchemy.orm import registry, mapped_column, Mapped, relationship
+from sqlalchemy.orm import mapped_column, Mapped, relationship
+from flasco.models.base import Base
 
-table_registry = registry()
-
-
-@table_registry.mapped_as_dataclass
-class ArmazenaUm:
+class ArmazenaUm(Base):
     __tablename__ = "armazena_um"
 
     id_video: Mapped[UUID] = mapped_column(

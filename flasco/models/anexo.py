@@ -1,13 +1,10 @@
 from uuid import uuid4, UUID
 from sqlalchemy import String, Uuid, ForeignKey
 from sqlalchemy.orm import registry, mapped_column, Mapped, relationship
-from flasco.models.base_mixin import TimestampMixin
+from flasco.models.base_timestamp import TimestampBase
+from flasco.models.base import Base
 
-table_registry = registry()
-
-
-@table_registry.mapped_as_dataclass
-class Anexo(TimestampMixin):
+class Anexo(Base, TimestampBase):
     __tablename__ = "anexo"
 
     nome: Mapped[str] = mapped_column(
@@ -26,7 +23,7 @@ class Anexo(TimestampMixin):
     id_anexo: Mapped[UUID] = mapped_column(
         Uuid(32),
         primary_key=True,
-        default_factory=uuid4)
+        default=uuid4)
 
 
     video: Mapped["Video"] = relationship(

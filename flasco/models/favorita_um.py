@@ -1,12 +1,9 @@
 from uuid import UUID
 from sqlalchemy import ForeignKey
-from sqlalchemy.orm import registry, mapped_column, Mapped, relationship
+from sqlalchemy.orm import mapped_column, Mapped, relationship
+from flasco.models.base import Base
 
-table_registry = registry()
-
-
-@table_registry.mapped_as_dataclass
-class FavoritaUm:
+class FavoritaUm(Base):
     __tablename__ = "favorita_um"
 
     id_usuario: Mapped[UUID] = mapped_column(
