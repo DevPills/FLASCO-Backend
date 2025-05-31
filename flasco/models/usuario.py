@@ -7,6 +7,11 @@ from flasco.models.base import Base
 class Usuario(Base, TimestampBase):
     __tablename__ = "usuario"
 
+    id_usuario: Mapped[UUID] = mapped_column(
+        Uuid(32), 
+        primary_key=True,
+        default=uuid4
+    )
     nome: Mapped[str] = mapped_column(
         String(255),
         nullable=False)
@@ -20,11 +25,6 @@ class Usuario(Base, TimestampBase):
     instituicao: Mapped[str] = mapped_column(
         String(255), 
         nullable=True)
-    id_usuario: Mapped[UUID] = mapped_column(
-        Uuid(32), 
-        primary_key=True,
-        default=uuid4
-    )
 
     aluno: Mapped["Aluno"] = relationship(
         back_populates="usuario",

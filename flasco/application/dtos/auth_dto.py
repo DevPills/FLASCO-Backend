@@ -1,14 +1,22 @@
+import uuid
 from pydantic import BaseModel
 
-class CreateUserDTO(BaseModel):
+from flasco.application.enums.curso import Curso
+from flasco.application.enums.formacao import Formacao
+
+class UserDTO(BaseModel):
+    id: uuid.UUID
+    nome: str
+    instituicao: str
     email: str
     password: str
 
-class CreateProfessorDTO(CreateUserDTO):
-    pru: str
+class ProfessorDTO(UserDTO):
+    formacao: Formacao
 
-class CreateAlunoDTO(CreateUserDTO):
-    pru: str
+
+class AlunoDTO(UserDTO): 
+    curso: Curso
 
 
 class LoginDTO(BaseModel):

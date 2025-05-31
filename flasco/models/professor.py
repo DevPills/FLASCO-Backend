@@ -1,9 +1,10 @@
 import enum
 from uuid import UUID
 from sqlalchemy import Enum, ForeignKey
-from sqlalchemy.orm import mapped_column, Mapped, relationship 
+from sqlalchemy.orm import mapped_column, Mapped, relationship, registry
 from flasco.models.usuario import Usuario
 
+table_registry = registry()
 class FormacaoEnum(enum.Enum):
     MESTRE = "Mestre"
     DOUTOR = "Doutor"

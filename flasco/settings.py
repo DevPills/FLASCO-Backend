@@ -6,7 +6,7 @@ class Settings(BaseSettings):
     SUPABASE_URL: str
     SUPABASE_ANON_KEY: str
     SUPABASE_BUCKET: str
-    SECRET: str
+    SECRET_KEY: str
     ALGORITHM: str
 
     model_config = {
