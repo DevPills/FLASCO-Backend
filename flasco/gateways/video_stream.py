@@ -11,5 +11,5 @@ class VideoStreamGateway:
             async with client.stream(
                 "GET", video_url, headers={'Range': 'bytes=0-'}, timeout=None
             ) as response:
-                async for chunk in response.iter_bytes():
+                async for chunk in response.aiter_bytes():
                     yield chunk
