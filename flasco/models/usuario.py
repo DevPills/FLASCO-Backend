@@ -60,7 +60,3 @@ class Usuario(Base):
         cascade="all, delete-orphan",
     )
 
-    matriculas: Mapped[list["SeMatricula"]] = relationship(
-        back_populates="aluno",
-        cascade="all, delete-orphan",
-    )
