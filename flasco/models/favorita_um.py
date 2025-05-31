@@ -2,6 +2,9 @@ from uuid import UUID
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import mapped_column, Mapped, relationship
 from flasco.models.base import Base
+from flasco.models.usuario import Usuario
+from flasco.models.modulo import Modulo
+
 
 class FavoritaUm(Base):
     __tablename__ = "favorita_um"

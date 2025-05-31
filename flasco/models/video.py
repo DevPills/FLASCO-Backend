@@ -1,12 +1,19 @@
+from typing import TYPE_CHECKING
 from uuid import uuid4, UUID
 from datetime import time
 from sqlalchemy import Integer, String, Time, Uuid, ForeignKey
-from sqlalchemy.orm import registry, mapped_column, Mapped, relationship
-from flasco.models.base_timestamp import TimestampBase
+from sqlalchemy.orm import mapped_column, Mapped, relationship
 from flasco.models.base import Base
 
+if TYPE_CHECKING:
+    from flasco.models.armazena_um import ArmazenaUm
+    from flasco.models.comentario import Comentario
+    from flasco.models.curte_um import CurteUm
+    from flasco.models.favorita_um import FavoritaUm
+    from flasco.models.anexo import Anexo
 
-class Video(Base, TimestampBase):
+
+class Video(Base):
     __tablename__ = "videoaula"
 
     nome: Mapped[str] = mapped_column(
@@ -15,7 +22,7 @@ class Video(Base, TimestampBase):
     descricao: Mapped[str] = mapped_column(
         String(500))
     duracao: Mapped[time] = mapped_column(
-        Time, 
+        Time,
         nullable=False)
     videoaula_path: Mapped[str] = mapped_column(
         String(255),

@@ -1,7 +1,10 @@
 from uuid import UUID
 from sqlalchemy import ForeignKey
-from sqlalchemy.orm import registry, mapped_column, Mapped, relationship
+from sqlalchemy.orm import mapped_column, Mapped, relationship
 from flasco.models.base import Base
+from flasco.models.usuario import Usuario
+from flasco.models.video import Video
+
 
 class CurteUm(Base):
     __tablename__ = "curte_um"

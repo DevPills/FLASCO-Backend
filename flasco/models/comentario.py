@@ -1,9 +1,12 @@
 from uuid import uuid4, UUID
 from sqlalchemy import String, Uuid, ForeignKey
-from sqlalchemy.orm import registry, mapped_column, Mapped, relationship
-from flasco.models.base_timestamp import TimestampBase
+from sqlalchemy.orm import mapped_column, Mapped, relationship
 from flasco.models.base import Base
-class Comentario(TimestampBase, Base):
+from flasco.models.usuario import Usuario
+from flasco.models.video import Video
+
+
+class Comentario(Base):
     __tablename__ = "comentario"
 
     conteudo: Mapped[str] = mapped_column(
@@ -31,7 +34,7 @@ class Comentario(TimestampBase, Base):
         remote_side=[id_comentario],
         back_populates="respostas"
     )
-    
+
     respostas: Mapped[list["Comentario"]] = relationship(
         back_populates="resposta_a",
         cascade="all, delete-orphan",

@@ -1,10 +1,11 @@
 from uuid import uuid4, UUID
 from sqlalchemy import String, Uuid, ForeignKey
-from sqlalchemy.orm import registry, mapped_column, Mapped, relationship
-from flasco.models.base_timestamp import TimestampBase
+from sqlalchemy.orm import mapped_column, Mapped, relationship
 from flasco.models.base import Base
+from flasco.models.video import Video
 
-class Anexo(Base, TimestampBase):
+
+class Anexo(Base):
     __tablename__ = "anexo"
 
     nome: Mapped[str] = mapped_column(
@@ -25,7 +26,5 @@ class Anexo(Base, TimestampBase):
         primary_key=True,
         default=uuid4)
 
-
     video: Mapped["Video"] = relationship(
         back_populates="anexos")
-    

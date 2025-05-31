@@ -8,6 +8,7 @@ class Settings(BaseSettings):
     SUPABASE_BUCKET: str
     SECRET_KEY: str
     ALGORITHM: str
+    MIGRATION_DATABASE_URL: str
 
     model_config = {
         "env_file": ".env",

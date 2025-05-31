@@ -1,7 +1,13 @@
+from typing import TYPE_CHECKING
 from uuid import UUID
 from sqlalchemy import ForeignKey
-from sqlalchemy.orm import registry, mapped_column, Mapped, relationship
+from sqlalchemy.orm import mapped_column, Mapped, relationship
 from flasco.models.base import Base
+
+if TYPE_CHECKING:
+    from flasco.models.aluno import Aluno
+    from flasco.models.modulo import Modulo
+
 
 class SeMatricula(Base):
     __tablename__ = "se_matricula"

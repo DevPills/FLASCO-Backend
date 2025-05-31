@@ -1,17 +1,22 @@
 import enum
+from typing import TYPE_CHECKING
 from uuid import UUID
 from sqlalchemy import Enum, ForeignKey
-from sqlalchemy.orm import mapped_column, Mapped, relationship, registry
-from flasco.models.usuario import Usuario
+from sqlalchemy.orm import mapped_column, Mapped, relationship
+from flasco.models.base import Base
 
-table_registry = registry()
+if TYPE_CHECKING:
+    from flasco.models.modulo import Modulo
+    from flasco.models.usuario import Usuario
+
+
 class FormacaoEnum(enum.Enum):
     MESTRE = "Mestre"
     DOUTOR = "Doutor"
     PHD = "Ph.D."
 
 
-class Professor(Usuario):
+class Professor(Base):
     __tablename__ = "professor"
 
     id_usuario: Mapped[UUID] = mapped_column(
@@ -26,7 +31,7 @@ class Professor(Usuario):
 
     modulos_criados: Mapped[list["Modulo"]] = relationship(
         back_populates="professor_criador",
-        cascade="all, delete-orphan", 
+        cascade="all, delete-orphan",
     )
 
     usuario: Mapped["Usuario"] = relationship(
