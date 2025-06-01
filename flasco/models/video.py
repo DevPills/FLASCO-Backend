@@ -45,10 +45,6 @@ class Video(Base):
         back_populates="video",
         cascade="all, delete-orphan",
     )
-    favoritos: Mapped[list["FavoritaUm"]] = relationship(
-        back_populates="video",
-        cascade="all, delete-orphan",
-    )
     anexos: Mapped[list["Anexo"]] = relationship(
         back_populates="video",
         cascade="all, delete-orphan",

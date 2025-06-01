@@ -2,7 +2,7 @@ from flasco.database.filestorage import SupabaseStorage
 from flasco.models.video import Video
 from flasco.repositories.video_repository import VideoRepository
 from uuid import UUID
-from datetime import time
+from datetime import datetime, time
 
 
 class VideoUploadUseCase:
@@ -27,7 +27,7 @@ class VideoUploadUseCase:
             descricao="blablabla",
             duracao=duracao_time,
             videoaula_path=filestorage_uploaded.full_path,
-            id_professor=UUID("70e2e8d8-6909-4761-998f-4b2b417ca4ff"),
+            id_professor=UUID("fb53ac66-7f07-46e7-81a7-b6901b0de3b3"),
         )
 
         response = await self.video_repository.create(item=video)
