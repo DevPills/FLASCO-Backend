@@ -18,15 +18,18 @@ class Video(Base):
 
     nome: Mapped[str] = mapped_column(
         String(255),
-        nullable=False)
+        nullable=False,
+    )
     descricao: Mapped[str] = mapped_column(
-        String(500))
+        String(500),
+    )
     duracao: Mapped[time] = mapped_column(
         Time,
         nullable=False)
     videoaula_path: Mapped[str] = mapped_column(
         String(255),
-        nullable=False)
+        nullable=False,
+    )
     id_professor: Mapped[UUID] = mapped_column(
         ForeignKey("professor.id_usuario"),
         nullable=False)
