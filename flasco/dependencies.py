@@ -1,7 +1,7 @@
 from fastapi import Depends
 from flasco.database.filestorage import SupabaseStorage
 from flasco.database.database import get_async_session
-from flasco.repositories.professor_repository import UserRepository
+from flasco.repositories.professor_repository import ProfessorRepository
 from flasco.repositories.video_repository import VideoRepository
 from flasco.usecases.auth.create_user_professor import CreateUserProfessorUseCase
 from flasco.usecases.video_delete_usecase import DeleteVideoUseCase
@@ -23,15 +23,15 @@ def get_video_repository(
 ):
     return VideoRepository(db_session=session)
 
-def user_repository(
+def professor_repository(
     session: AsyncSession = Depends(get_async_session),
-) -> UserRepository: 
-    return  UserRepository(db_session=session)
+):
+    return  ProfessorRepository(db_session=session)
 
 def create_professor_user_usecase(
-    user_repository: UserRepository = Depends(user_repository),
+    professor_repository: ProfessorRepository = Depends(professor_repository),
 ) -> CreateUserProfessorUseCase:
-    return CreateUserProfessorUseCase(user_repository=user_repository)
+    return CreateUserProfessorUseCase(professor_repository=professor_repository)
 
 
 def video_upload_usecase(

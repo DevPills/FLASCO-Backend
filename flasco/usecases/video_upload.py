@@ -26,7 +26,7 @@ class VideoUploadUseCase:
             nome=video_name,
             descricao="blablabla",
             duracao=duracao_time,
-            videoaula_path=filestorage_uploaded.full_path,
+            videoaula_path=filestorage_uploaded.path,
             id_professor=UUID("fb53ac66-7f07-46e7-81a7-b6901b0de3b3"),
         )
 

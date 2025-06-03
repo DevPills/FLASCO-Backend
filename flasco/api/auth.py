@@ -5,8 +5,7 @@ from flasco.application.dtos.auth_dto import ProfessorDTO
 from flasco.dependencies import create_professor_user_usecase
 from flasco.usecases.auth.create_user_professor import CreateUserProfessorUseCase
 
-router = APIRouter(prefix="/auth", tags=["Auth"])
-
+router = APIRouter(prefix="/v1/auth", tags=["auth"])
 
 @router.post("/professor")
 async def create_usuario_professor(
