@@ -1,9 +1,13 @@
 from http import HTTPStatus
 from fastapi import APIRouter, Depends, File, Query, Request, UploadFile
 
-from flasco.application.dtos.auth_dto import ProfessorDTO
-from flasco.dependencies import create_professor_user_usecase
+from flasco.application.dtos.auth_dto import LoginDTO, ProfessorDTO
+from flasco.dependencies import (
+    create_professor_user_usecase,
+    login_usecase,
+)
 from flasco.usecases.auth.create_user_professor import CreateUserProfessorUseCase
+from flasco.usecases.auth.login import LoginUseCase
 
 router = APIRouter(prefix="/auth", tags=["Auth"])
 
@@ -16,3 +20,11 @@ async def create_usuario_professor(
 ): 
     response = await create_user_usecase.execute(professor_data)
     return response
+
+
+@router.post("/login")
+async def login(
+    login_data: LoginDTO,
+    usecase: LoginUseCase = Depends(login_usecase),
+):
+    return await usecase.execute(login_data)
