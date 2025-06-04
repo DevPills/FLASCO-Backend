@@ -1,0 +1,200 @@
+diff --git a/flasco/api/auth.py b/flasco/api/auth.py
+index 442f839b9ed1f1e4ecc60224e15613ce6c49bdfb..026f9fca5c719e3b7222f842064be4d697586c48 100644
+--- a/flasco/api/auth.py
++++ b/flasco/api/auth.py
+@@ -1,18 +1,30 @@
+ from http import HTTPStatus
+ from fastapi import APIRouter, Depends, File, Query, Request, UploadFile
+ 
+-from flasco.application.dtos.auth_dto import ProfessorDTO
+-from flasco.dependencies import create_professor_user_usecase
++from flasco.application.dtos.auth_dto import LoginDTO, ProfessorDTO
++from flasco.dependencies import (
++    create_professor_user_usecase,
++    login_usecase,
++)
+ from flasco.usecases.auth.create_user_professor import CreateUserProfessorUseCase
++from flasco.usecases.auth.login import LoginUseCase
+ 
+ router = APIRouter(prefix="/auth", tags=["Auth"])
+ 
+ 
+ @router.post("/professor")
+ async def create_usuario_professor(
+     request: Request,
+     professor_data: ProfessorDTO,
+     create_user_usecase: CreateUserProfessorUseCase = Depends(create_professor_user_usecase)
+ ): 
+     response = await create_user_usecase.execute(professor_data)
+-    return response
+\ No newline at end of file
++    return response
++
++
++@router.post("/login")
++async def login(
++    login_data: LoginDTO,
++    usecase: LoginUseCase = Depends(login_usecase),
++):
++    return await usecase.execute(login_data)
+diff --git a/flasco/dependencies.py b/flasco/dependencies.py
+index c78b5d83ac8145796f0be4ccc7d66b0b83c8ac14..80b95463ae032d9d213fe1ce7d431e3fd719c17c 100644
+--- a/flasco/dependencies.py
++++ b/flasco/dependencies.py
+@@ -1,61 +1,74 @@
+ from fastapi import Depends
+ from flasco.database.filestorage import SupabaseStorage
+ from flasco.database.database import get_async_session
+ from flasco.repositories.professor_repository import UserRepository
++from flasco.repositories.usuario_repository import UsuarioRepository
+ from flasco.repositories.video_repository import VideoRepository
+ from flasco.usecases.auth.create_user_professor import CreateUserProfessorUseCase
++from flasco.usecases.auth.login import LoginUseCase
+ from flasco.usecases.video_delete_usecase import DeleteVideoUseCase
+ from flasco.usecases.video_get import GetVideoUseCase
+ from flasco.usecases.video_list import VideoListUseCase
+ from flasco.usecases.video_upload import VideoUploadUseCase
+ from sqlalchemy.ext.asyncio import AsyncSession
+ from flasco.settings import settings
+ 
+ 
+ def get_supabase_service() -> SupabaseStorage:
+     return SupabaseStorage(
+         bucket=settings.SUPABASE_BUCKET,
+     )
+ 
+ 
+ def get_video_repository(
+     session: AsyncSession = Depends(get_async_session),
+ ):
+     return VideoRepository(db_session=session)
+ 
+ def user_repository(
+     session: AsyncSession = Depends(get_async_session),
+-) -> UserRepository: 
++) -> UserRepository:
+     return  UserRepository(db_session=session)
+ 
++def usuario_repository(
++    session: AsyncSession = Depends(get_async_session),
++) -> UsuarioRepository:
++    return UsuarioRepository(db_session=session)
++
+ def create_professor_user_usecase(
+     user_repository: UserRepository = Depends(user_repository),
+ ) -> CreateUserProfessorUseCase:
+     return CreateUserProfessorUseCase(user_repository=user_repository)
+ 
+ 
++def login_usecase(
++    user_repository: UsuarioRepository = Depends(usuario_repository),
++) -> LoginUseCase:
++    return LoginUseCase(user_repository=user_repository)
++
++
+ def video_upload_usecase(
+     video_repository: VideoRepository = Depends(get_video_repository),
+     supabase_service: SupabaseStorage = Depends(get_supabase_service),
+ ) -> VideoUploadUseCase:
+     return VideoUploadUseCase(
+         supabase_service=supabase_service,
+         video_repository=video_repository
+     )
+ 
+ 
+ def video_delete_usecase(
+     video_repository: VideoRepository = Depends(get_video_repository),
+     supabase_service: SupabaseStorage = Depends(get_supabase_service),
+ ) -> DeleteVideoUseCase:
+     return DeleteVideoUseCase(
+         supabase_service=supabase_service,
+         video_respository=video_repository
+     )
+ 
+ 
+ def get_video_usecase(
+     video_repository: VideoRepository = Depends(get_video_repository),
+     supabase_service: SupabaseStorage = Depends(get_supabase_service),
+ ) -> GetVideoUseCase:
+     return GetVideoUseCase(
+diff --git a/flasco/main.py b/flasco/main.py
+index fd339f08165e56e63125c7ca6a3fd67a614d4792..cbcbf352d5827dcb3ed35c50caa61239ab306f72 100644
+--- a/flasco/main.py
++++ b/flasco/main.py
+@@ -1,24 +1,26 @@
+ from fastapi import FastAPI
+ from flasco.api.video import router as video_router
++from flasco.api.auth import router as auth_router
+ from fastapi.middleware.cors import CORSMiddleware
+ 
+ app = FastAPI()
+ 
+ app.include_router(video_router)
++app.include_router(auth_router)
+ 
+ origins = [
+     "http://localhost:3000/",
+ ]
+ 
+ app.add_middleware(
+     CORSMiddleware,
+     allow_origins=['*'],
+     allow_credentials=True,
+     allow_methods=["*"],
+     allow_headers=["*"],
+ )
+ 
+ 
+ @app.get("/health")
+ async def health_check():
+     return {"status": "healthy"}
+diff --git a/flasco/repositories/usuario_repository.py b/flasco/repositories/usuario_repository.py
+new file mode 100644
+index 0000000000000000000000000000000000000000..1ee80e772bc35fe601ee982fa567ee90e48f5071
+--- /dev/null
++++ b/flasco/repositories/usuario_repository.py
+@@ -0,0 +1,14 @@
++from sqlalchemy import select
++from sqlalchemy.ext.asyncio import AsyncSession
++
++from flasco.models.usuario import Usuario
++
++
++class UsuarioRepository:
++    def __init__(self, db_session: AsyncSession):
++        self.db_session = db_session
++
++    async def get_by_email(self, email: str) -> Usuario | None:
++        query = select(Usuario).where(Usuario.email == email)
++        result = await self.db_session.execute(query)
++        return result.scalars().first()
+diff --git a/flasco/usecases/auth/login.py b/flasco/usecases/auth/login.py
+index 52fdf60741d1d092a13c288676a08c7c61eb6624..e29631cbc50c434bf37afcb3a4fb1cf04981c50a 100644
+--- a/flasco/usecases/auth/login.py
++++ b/flasco/usecases/auth/login.py
+@@ -1,4 +1,23 @@
+ from fastapi import HTTPException, status
++
+ from flasco.application.dtos.auth_dto import LoginDTO
+ from flasco.application.utils.auth import verify_password
+-from flasco.infra
+\ No newline at end of file
++from flasco.infra.services.jwt_token_service import create_access_token
++from flasco.repositories.usuario_repository import UsuarioRepository
++
++
++class LoginUseCase:
++    def __init__(self, user_repository: UsuarioRepository):
++        self.user_repository = user_repository
++
++    async def execute(self, login_data: LoginDTO):
++        user = await self.user_repository.get_by_email(login_data.email)
++        if not user or not verify_password(login_data.password, user.senha):
++            raise HTTPException(
++                status_code=status.HTTP_401_UNAUTHORIZED,
++                detail="Email ou senha inválidos",
++            )
++        access_token = create_access_token(
++            {"user_id": str(user.id_usuario), "email": user.email}
++        )
++        return {"access_token": access_token, "token_type": "bearer"}
