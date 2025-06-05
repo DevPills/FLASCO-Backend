@@ -1,24 +1,20 @@
-# flasco/usecases/auth/create_user_professor.py
-
 from fastapi import HTTPException
-from flasco.application.dtos.auth_dto import ProfessorDTO
+from flasco.application.dtos.auth_dto import AlunoDTO
 from flasco.application.utils.auth import get_password_hash
 from flasco.infra.services.jwt_token_service import create_access_token
-from flasco.repositories.professor_repository import ProfessorRepository
-from passlib.context import CryptContext
+from flasco.repositories.aluno_repository import AlunoRepository
 
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
-class CreateUserProfessorUseCase:
-    def __init__(self, professor_repository: ProfessorRepository):
-        self.professor_repository = professor_repository
+class CreateUserAlunoUseCase: 
+    def __init__(self, aluno_repository: AlunoRepository):
+        self.aluno_repository = aluno_repository
 
-    async def execute(self, user: ProfessorDTO) -> None:
-        professor_user_registered = await self.professor_repository.get_professor_by_id(
+    async def execute(self, user: AlunoDTO) -> None:
+        aluno_user_registered = await self.aluno_repository.get_aluno_by_id(
             user.id
         )
 
-        if professor_user_registered:
+        if aluno_user_registered:
             raise HTTPException(
                 status_code=400,
                 detail="Usuario ja cadastrado"

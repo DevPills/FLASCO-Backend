@@ -4,7 +4,6 @@ from uuid import UUID
 from sqlalchemy import Enum, ForeignKey
 from sqlalchemy.orm import mapped_column, Mapped, relationship
 from flasco.models.base import Base
-
 if TYPE_CHECKING:
     from flasco.models.modulo import Modulo
     from flasco.models.usuario import Usuario
