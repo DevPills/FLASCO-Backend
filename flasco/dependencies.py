@@ -41,9 +41,9 @@ def create_professor_user_usecase(
     return CreateUserProfessorUseCase(professor_repository=professor_repository)
 
 def create_aluno_user_usecase(
-    user_repository: AlunoRepository = Depends(aluno_repository),
+    aluno_repository: AlunoRepository = Depends(aluno_repository),
 ) -> CreateUserAlunoUseCase:
-    return CreateUserAlunoUseCase(user_repository=user_repository)
+    return CreateUserAlunoUseCase(aluno_repository=aluno_repository)
 
 
 def video_upload_usecase(

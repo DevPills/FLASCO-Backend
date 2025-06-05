@@ -7,7 +7,8 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from sqlalchemy import inspect, select
 from flasco.application.dtos.auth_dto import AlunoDTO
-from flasco.models.aluno import Aluno
+from flasco.application.enums.curso import Curso
+from flasco.models.aluno import Aluno, CursoEnum
 from flasco.models.professor import FormacaoEnum
 from flasco.models.usuario import Usuario
 from flasco.repositories.base_repository import BaseRepository
@@ -53,16 +54,16 @@ class AlunoRepository(BaseRepository):
         usuario = await self.upsert_user(dto)
 
         curso_enum = (
-            FormacaoEnum[dto.curso.name.upper()]
+            CursoEnum[dto.curso.name.upper()]
             if hasattr(dto.curso, "name")
-            else FormacaoEnum[dto.curso.upper()]
+            else CursoEnum[dto.curso.upper()]
             if dto.curso
             else None
         )
 
         aluno = Aluno(
             id_usuario=usuario.id_usuario,
-            formacao=FormacaoEnum,
+            curso=curso_enum,
         )
         self.db_session.add(aluno)
 

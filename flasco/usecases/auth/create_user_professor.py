@@ -25,7 +25,7 @@ class CreateUserProfessorUseCase:
             )
         user.password = get_password_hash(user.password)
         try:
-            await self.user_repository.create(user)
+            await self.professor_repository.create(user)
         except Exception as ex:
             raise HTTPException(
                 status_code=400,

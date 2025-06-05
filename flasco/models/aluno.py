@@ -9,7 +9,7 @@ from flasco.models.se_matricula import SeMatricula
 
 class CursoEnum(enum.Enum):
     TECNICO_DE_INFORMATICA = "Técnico de Informática"
-    ENGENHARIA_DE_SOFTWARE = "Engenharia de Software"
+    ENGENHARIA_DE_SOFTWARE = "ENGENHARIADESOFTWARE"
     ENGENHARIA_DE_COMPUTACAO = "Engenharia de Computação"
     SISTEMAS_DE_INFORMACAO = "Sistemas de Informação"
     ANALISE_DESENVOLVIMENTO_DE_SISTEMAS = (
