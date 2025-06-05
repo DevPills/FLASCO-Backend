@@ -5,7 +5,6 @@ from flasco.application.enums.formacao import Formacao
 from flasco.models.aluno import CursoEnum
 
 class UserDTO(BaseModel):
-    id: uuid.UUID
     nome: str
     instituicao: str
     email: str

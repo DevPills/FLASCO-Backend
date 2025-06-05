@@ -5,7 +5,7 @@ import uuid
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from sqlalchemy import inspect, select
+from sqlalchemy import String, inspect, select
 from flasco.application.dtos.auth_dto import AlunoDTO
 from flasco.application.enums.curso import Curso
 from flasco.models.aluno import Aluno, CursoEnum
@@ -17,9 +17,9 @@ from flasco.repositories.base_repository import BaseRepository
 class AlunoRepository(BaseRepository):
     def __init__(self, db_session: AsyncSession):
         super().__init__(db_session, Aluno)
-
-    async def get_aluno_by_id(self, id: uuid) -> Aluno:
-        query = select(Aluno).where(Aluno.id_usuario == id)
+    
+    async def get_aluno_by_email(self, email: str) -> Usuario:
+        query = select(Usuario).where(Usuario.email == email)
         result = await self.db_session.execute(query)
         return result.scalars().first()
 
@@ -29,23 +29,17 @@ class AlunoRepository(BaseRepository):
         return result.scalars().first()
 
     async def upsert_user(self, dto: AlunoDTO) -> Usuario:
-        usuario = await self.get_user_by_id(dto.id)
-        if usuario:
-            return usuario
 
         data = dto.model_dump()
 
-        cols = {c.key for c in inspect(Usuario).mapper.column_attrs}
-        usuario_data = {k: v for k, v in data.items() if k in cols}
 
-        if "password" in data and "senha" in cols:
-            usuario_data["senha"] = data["password"]
-        elif "password" in data:
-            usuario_data["password"] = data["password"]
+        usuario = Usuario(
+            nome=dto.nome,
+            email=dto.email,
+            instituicao=dto.instituicao,
+            senha=dto.password
+        )
 
-        usuario_data["id_usuario"] = dto.id
-
-        usuario = Usuario(**usuario_data)
         self.db_session.add(usuario)
         await self.db_session.flush()
         return usuario
