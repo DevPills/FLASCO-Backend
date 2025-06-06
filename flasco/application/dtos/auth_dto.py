@@ -1,11 +1,10 @@
 import uuid
 from pydantic import BaseModel
 
-from flasco.application.enums.curso import Curso
 from flasco.application.enums.formacao import Formacao
+from flasco.models.aluno import CursoEnum
 
 class UserDTO(BaseModel):
-    id: uuid.UUID
     nome: str
     instituicao: str
     email: str
@@ -16,7 +15,7 @@ class ProfessorDTO(UserDTO):
 
 
 class AlunoDTO(UserDTO): 
-    curso: Curso
+    curso: CursoEnum
 
 
 class LoginDTO(BaseModel):
