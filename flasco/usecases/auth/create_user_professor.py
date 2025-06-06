@@ -14,8 +14,8 @@ class CreateUserProfessorUseCase:
         self.professor_repository = professor_repository
 
     async def execute(self, user: ProfessorDTO) -> None:
-        professor_user_registered = await self.professor_repository.get_professor_by_id(
-            user.id
+        professor_user_registered = await self.professor_repository.get_professor_by_email(
+            user.email
         )
 
         if professor_user_registered:
@@ -25,13 +25,13 @@ class CreateUserProfessorUseCase:
             )
         user.password = get_password_hash(user.password)
         try:
-            await self.professor_repository.create(user)
+            professor = await self.professor_repository.create(user)
         except Exception as ex:
             raise HTTPException(
                 status_code=400,
                 detail=f"Não foi possível criar o usuário: {str(ex)}"
             )
-        access_token = create_access_token(data={"sub": str(user.id)})
+        access_token = create_access_token(data={"sub": str(professor.id_usuario)})
         return {
             "status": "sucesso",
             "mensagem": "Usuário criado com sucesso",

@@ -30,9 +30,6 @@ class AlunoRepository(BaseRepository):
 
     async def upsert_user(self, dto: AlunoDTO) -> Usuario:
 
-        data = dto.model_dump()
-
-
         usuario = Usuario(
             nome=dto.nome,
             email=dto.email,

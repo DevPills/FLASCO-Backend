@@ -15,8 +15,8 @@ class ProfessorRepository(BaseRepository):
     def __init__(self, db_session: AsyncSession):
         super().__init__(db_session, Professor)
 
-    async def get_professor_by_id(self, id: uuid) -> Professor:
-        query = select(Professor).where(Professor.id_usuario == id)
+    async def get_professor_by_email(self, email: str) -> Usuario:
+        query = select(Usuario).where(Usuario.email == email)
         result = await self.db_session.execute(query)
         return result.scalars().first()
 
@@ -26,23 +26,15 @@ class ProfessorRepository(BaseRepository):
         return result.scalars().first()
 
     async def upsert_user(self, dto: ProfessorDTO) -> Usuario:
-        usuario = await self.get_user_by_id(dto.id)
-        if usuario:
-            return usuario
 
-        data = dto.model_dump()
 
-        cols = {c.key for c in inspect(Usuario).mapper.column_attrs}
-        usuario_data = {k: v for k, v in data.items() if k in cols}
-
-        if "password" in data and "senha" in cols:
-            usuario_data["senha"] = data["password"]
-        elif "password" in data:
-            usuario_data["password"] = data["password"]
-
-        usuario_data["id_usuario"] = dto.id
-
-        usuario = Usuario(**usuario_data)
+        usuario = Usuario(
+            nome=dto.nome,
+            email=dto.email,
+            instituicao=dto.instituicao,
+            senha=dto.password
+        )
+        
         self.db_session.add(usuario)
         await self.db_session.flush()
         return usuario
