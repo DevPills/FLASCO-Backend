@@ -1,4 +1,3 @@
-from http import HTTPStatus
 from fastapi import APIRouter, Depends, File, Query, Request, UploadFile
 
 from flasco.application.dtos.auth_dto import AlunoDTO, ProfessorDTO
