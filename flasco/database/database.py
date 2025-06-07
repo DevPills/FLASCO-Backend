@@ -54,7 +54,7 @@ engine = create_async_engine(
     settings.DATABASE_URL,
     connect_args={
         "ssl": ssl_context,  # <-- CORREÇÃO: PASSE A VARIÁVEL AQUI
-        "statement_cache_size": 0,
+
     },
 )
 print("--- ENGINE CRIADA COM SUCESSO ---")
