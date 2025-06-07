@@ -11,12 +11,25 @@ class LoginUseCase:
         self.user_repository = user_repository
 
     async def execute(self, login_data: LoginDTO):
+        print(f"Attempting login for email: {login_data.email}")
         user = await self.user_repository.get_by_email(login_data.email)
-        if not user or not verify_password(login_data.password, user.senha):
+        
+        if not user:
+            print(f"User not found for email: {login_data.email}")
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
                 detail="Email ou senha inválidos",
             )
+
+        print(f"User found: {user.email}, verifying password...")
+        if not verify_password(login_data.password, user.senha):
+            print(f"Invalid password for user: {user.email}")
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Email ou senha inválidos",
+            )
+
+        print(f"Password verified successfully for user: {user.email}")
         access_token = create_access_token(
             {"user_id": str(user.id_usuario), "email": user.email}
         )
