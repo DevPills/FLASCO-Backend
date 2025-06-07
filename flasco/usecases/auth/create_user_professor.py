@@ -35,4 +35,3 @@ class CreateUserProfessorUseCase:
             "mensagem": "Usuário criado com sucesso",
             "access_token": access_token
         }
-()
