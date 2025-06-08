@@ -1,11 +1,11 @@
 from fastapi import Depends
 from flasco.database.filestorage import SupabaseStorage
 from flasco.database.database import get_async_session
-from flasco.repositories.aluno_repository import AlunoRepository
 from flasco.repositories.professor_repository import ProfessorRepository
+from flasco.repositories.usuario_repository import UsuarioRepository
 from flasco.repositories.video_repository import VideoRepository
-from flasco.usecases.auth.create_user_aluno import CreateUserAlunoUseCase
 from flasco.usecases.auth.create_user_professor import CreateUserProfessorUseCase
+from flasco.usecases.auth.login import LoginUseCase
 from flasco.usecases.video_delete_usecase import DeleteVideoUseCase
 from flasco.usecases.video_get import GetVideoUseCase
 from flasco.usecases.video_list import VideoListUseCase
@@ -25,25 +25,31 @@ def get_video_repository(
 ):
     return VideoRepository(db_session=session)
 
+
+def usuario_repository(
+    session: AsyncSession = Depends(get_async_session),
+) -> UsuarioRepository:
+    return UsuarioRepository(db_session=session)
+
+
 def professor_repository(
     session: AsyncSession = Depends(get_async_session),
-) -> ProfessorRepository: 
-    return  ProfessorRepository(db_session=session)
+) -> ProfessorRepository:
+    return ProfessorRepository(db_session=session)
 
-def aluno_repository(
-    session: AsyncSession = Depends(get_async_session),
-) -> AlunoRepository: 
-    return  AlunoRepository(db_session=session)
 
 def create_professor_user_usecase(
     professor_repository: ProfessorRepository = Depends(professor_repository),
 ) -> CreateUserProfessorUseCase:
-    return CreateUserProfessorUseCase(professor_repository=professor_repository)
+    return CreateUserProfessorUseCase(
+        professor_repository=professor_repository
+    )
 
-def create_aluno_user_usecase(
-    aluno_repository: AlunoRepository = Depends(aluno_repository),
-) -> CreateUserAlunoUseCase:
-    return CreateUserAlunoUseCase(aluno_repository=aluno_repository)
+
+def login_usecase(
+    user_repository: UsuarioRepository = Depends(usuario_repository),
+) -> LoginUseCase:
+    return LoginUseCase(user_repository=user_repository)
 
 
 def video_upload_usecase(
