@@ -2,7 +2,7 @@ from flasco.database.filestorage import SupabaseStorage
 from flasco.models.video import Video
 from flasco.repositories.video_repository import VideoRepository
 from uuid import UUID
-from datetime import datetime, time
+from datetime import time
 
 
 class VideoUploadUseCase:
