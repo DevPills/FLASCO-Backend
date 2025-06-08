@@ -3,7 +3,6 @@ from typing import Optional
 
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.inspection import inspect
 
 from flasco.models.professor import Professor, FormacaoEnum
 from flasco.models.usuario import Usuario
@@ -26,15 +25,13 @@ class ProfessorRepository(BaseRepository):
         return result.scalars().first()
 
     async def upsert_user(self, dto: ProfessorDTO) -> Usuario:
-
-
         usuario = Usuario(
             nome=dto.nome,
             email=dto.email,
             instituicao=dto.instituicao,
             senha=dto.password
         )
-        
+
         self.db_session.add(usuario)
         await self.db_session.flush()
         return usuario

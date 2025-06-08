@@ -19,4 +19,3 @@ class CreateModuloUseCase:
                 status_code=400,
                 detail=f"Não foi possível criar o modulo: {str(ex)}"
             )
-      

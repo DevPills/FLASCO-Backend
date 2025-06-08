@@ -5,6 +5,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 T = TypeVar("T")
 
+
 class BaseRepository:
     def __init__(self, db_session: AsyncSession, model: T):
         self.db_session = db_session
@@ -17,16 +18,16 @@ class BaseRepository:
         await self.de_session.refresh(db_item_data)
 
         return db_item_data
-    
+
     async def list(self) -> T:
         stmt = select(self.model)
         return await self.db_session.execute(stmt)
-    
+
     async def get_by_id(self, item_id: str) -> T:
         stmt = select(self.model).where(self.model.id == int(item_id))
         result = await self.db_session.execute(stmt)
         return result.scalars().first()
-    
+
     async def update(self, item_id: str, update_item_data: T) -> T:
         stmt = (
             update(self.model)
@@ -38,7 +39,7 @@ class BaseRepository:
 
         result = await self.get_by_id(item_id)
         return result
-    
+
     async def delete(self, item_id: str):
         stmt = delete(self.model).where(self.model.id == int(item_id))
 
