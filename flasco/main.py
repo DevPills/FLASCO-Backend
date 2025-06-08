@@ -1,12 +1,14 @@
 from fastapi import FastAPI
 from flasco.api.video import router as video_router
 from flasco.api.auth import router as auth_router
+from flasco.api.modulo import router as modulo_router
 from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
 
 app.include_router(video_router)
-app.include_router(auth_router) 
+app.include_router(auth_router)
+app.include_router(modulo_router)
 
 origins = [
     "http://localhost:3000/",

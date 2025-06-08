@@ -5,6 +5,7 @@ from flasco.application.dtos.auth_dto import CurrentUserDTO
 from flasco.application.dtos.error_dto import ServiceError
 from flasco.settings import settings
 
+
 def verification_token(func):
     @wraps(func)
     async def wrapper(*args, **kwargs):
