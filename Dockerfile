@@ -2,6 +2,8 @@ FROM python:3.12-slim
 
 WORKDIR /app
 
+RUN echo "precedence ::ffff:0:0/96  100" > /etc/gai.conf
+
 COPY pyproject.toml poetry.lock ./
 
 RUN pip install poetry
