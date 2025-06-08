@@ -10,31 +10,33 @@ class LoginUseCase:
     def __init__(self, user_repository: UsuarioRepository):
         self.user_repository = user_repository
 
-    async def execute(self, user: LoginDTO) -> None:
-        user_registered = await self.user_repository.get_user_by_email(
-            user.email
-        )
-
-        if not user_registered:
+    async def execute(self, login_data: LoginDTO):
+        print(f"Attempting login for email: {login_data.email}")
+        user = await self.user_repository.get_user_by_email(login_data.email)
+        
+        if not user:
+            print(f"User not found for email: {login_data.email}")
             raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
-                detail="Usuário não cadastrado"
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Email ou senha inválidos",
             )
 
-        if not verify_password(user.password, user_registered.senha):
+        print(f"User found: {user.email}, verifying password...")
+        if not verify_password(login_data.password, user.senha):
+            print(f"Invalid password for user: {user.email}")
             raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
-                detail="Senha incorreta"
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Email ou senha inválidos",
             )
 
+        print(f"Password verified successfully for user: {user.email}")
         access_token = create_access_token(
-            data={
-                "email": user.email,
-                "user_id": str(user_registered.id_usuario)
-            })
-
+            data={"user_id": str(user.id_usuario), "email": user.email}
+        )
+        
         return {
             "status": "sucesso",
             "mensagem": "Usuário logado com sucesso",
-            "access_token": access_token
+            "access_token": access_token,
+            "token_type": "bearer"
         }

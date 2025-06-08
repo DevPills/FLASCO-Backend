@@ -1,15 +1,11 @@
 from fastapi import APIRouter, Depends, Request, status
 
-from flasco.application.dtos.auth_dto import AlunoDTO, LoginDTO, ProfessorDTO
+from flasco.application.dtos.auth_dto import LoginDTO, ProfessorDTO
 from flasco.dependencies import (
-    create_aluno_user_usecase,
     create_professor_user_usecase,
     login_usecase
 )
-from flasco.usecases.auth.create_user_aluno import CreateUserAlunoUseCase
-from flasco.usecases.auth.create_user_professor import (
-    CreateUserProfessorUseCase
-)
+from flasco.usecases.auth.create_user_professor import CreateUserProfessorUseCase
 from flasco.usecases.auth.login import LoginUseCase
 
 router = APIRouter(prefix="/auth", tags=["Auth"])
@@ -27,23 +23,10 @@ async def create_usuario_professor(
     return response
 
 
-@router.post("/aluno")
-async def create_usuario_aluno(
-    request: Request,
-    professor_data: AlunoDTO,
-    create_user_usecase: CreateUserAlunoUseCase = Depends(
-        create_aluno_user_usecase
-    )
-):
-    response = await create_user_usecase.execute(professor_data)
-    return response
-
-
 @router.post('/login', status_code=status.HTTP_200_OK)
 async def login(
     request: Request,
-    user_data: LoginDTO,
-    login_usecase: LoginUseCase = Depends(login_usecase)
+    login_data: LoginDTO,
+    usecase: LoginUseCase = Depends(login_usecase)
 ):
-    response = await login_usecase.execute(user_data)
-    return response
+    return await usecase.execute(login_data)
