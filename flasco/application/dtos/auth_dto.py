@@ -26,4 +26,4 @@ class LoginDTO(BaseModel):
 
 class CurrentUserDTO(BaseModel):
     user_id: str
-    password: str
+    email: str

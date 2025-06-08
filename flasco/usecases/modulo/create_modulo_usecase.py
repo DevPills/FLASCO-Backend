@@ -11,7 +11,7 @@ class CreateModuloUseCase:
     ):
         self.modulo_repository = modulo_respoitory
 
-    async def execute(self, modulo: ModuloDTO) -> None: 
+    async def execute(self, modulo: ModuloDTO, current_user_id: str) -> None:
         try:
             modulo = await self.modulo_repository.create(modulo)
         except Exception as ex:
