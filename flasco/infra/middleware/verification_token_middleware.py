@@ -10,7 +10,7 @@ def verification_token(func):
     @wraps(func)
     async def wrapper(*args, **kwargs):
         request = kwargs.get("request")
-        auth_header = request.headers.get("Autorization")
+        auth_header = request.headers.get("Authorization")
         if not auth_header or not auth_header.startswith("Bearer "):
             return ServiceError(
                 status_code=HTTPStatus.UNPROCESSABLE_ENTITY,
@@ -21,7 +21,7 @@ def verification_token(func):
         try:
             payload = jwt.decode(
                 token,
-                settings.SECRET,
+                settings.SECRET_KEY,
                 algorithms=["HS256"]
             )
         except jwt.ExpiredSignatureError:
