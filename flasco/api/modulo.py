@@ -1,3 +1,4 @@
+from typing import List
 from fastapi import APIRouter, Depends, Request, status
 
 from flasco.application.dtos.modulo_dto import (
@@ -12,12 +13,17 @@ from flasco.usecases.modulo.create_modulo_usecase import CreateModuloUseCase
 from flasco.dependencies import (
     create_modulo_usecase,
     delete_favorite_modulo_usecase,
-    favorite_module_usecase
+    favorite_module_usecase,
+    get_all_modulos_usecase,
+    get_favorited_modulos_usecase,
+    swagger_security
 )
 from flasco.usecases.modulo.delete_modulo_usecase import DeleteModuloUseCase
-from flasco.usecases.modulo.favorite_modulo import FavoriteModuloUseCase
+from flasco.usecases.modulo.favorite_modulo_usecase import FavoriteModuloUseCase
+from flasco.usecases.modulo.get_all_modulos_usecase import GetAllModulosUseCase
+from flasco.usecases.modulo.get_favorited_modulos_usecase import GetFavoritedModulosUseCase
 
-router = APIRouter(prefix="/modulo", tags=["Modulo"])
+router = APIRouter(prefix="/modulo", tags=["Modulo"], dependencies=[Depends(swagger_security)])
 
 
 @router.post("/create", status_code=status.HTTP_201_CREATED)
@@ -72,3 +78,28 @@ async def delete_favoritar_modulo(
         status="Sucesso",
         message="Modulo desfavoritado com sucesso",
     )
+
+@router.get("/list", status_code=status.HTTP_200_OK)
+@verification_token
+async def get_all_modulos(
+    request: Request,
+    usecase: GetAllModulosUseCase = Depends(get_all_modulos_usecase),
+):
+    modulos = await usecase.execute()
+    return {
+        "status": "success",
+        "modulos": modulos
+    }
+
+@router.get("/favoritos", status_code=status.HTTP_200_OK)
+@verification_token
+async def get_favorited_modulos(
+    request: Request,
+    usecase: GetFavoritedModulosUseCase = Depends(get_favorited_modulos_usecase),
+):
+    current_user = request.state.user
+    modulos = await usecase.execute(user_id=current_user.user_id)
+    return {
+        "status": "success",
+        "modulos": modulos
+    }
