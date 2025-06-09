@@ -34,6 +34,9 @@ class Usuario(Base):
     instituicao: Mapped[str] = mapped_column(
         String(255),
         nullable=True)
+    tipo: Mapped[str] = mapped_column(
+        String(255),
+        nullable=True)
 
     aluno: Mapped["Aluno"] = relationship(
         back_populates="usuario",
