@@ -1,5 +1,6 @@
 from fastapi import Depends
 from flasco.database.filestorage import SupabaseStorage
+from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from flasco.database.database import get_async_session
 from flasco.repositories.aluno_repository import AlunoRepository
 from flasco.repositories.favorito_repository import FavoritoRepository
@@ -14,7 +15,9 @@ from flasco.usecases.auth.create_user_professor import (
 from flasco.usecases.auth.login import LoginUseCase
 from flasco.usecases.modulo.create_modulo_usecase import CreateModuloUseCase
 from flasco.usecases.modulo.delete_modulo_usecase import DeleteModuloUseCase
-from flasco.usecases.modulo.favorite_modulo import FavoriteModuloUseCase
+from flasco.usecases.modulo.favorite_modulo_usecase import FavoriteModuloUseCase
+from flasco.usecases.modulo.get_all_modulos_usecase import GetAllModulosUseCase
+from flasco.usecases.modulo.get_favorited_modulos_usecase import GetFavoritedModulosUseCase
 from flasco.usecases.video_delete_usecase import DeleteVideoUseCase
 from flasco.usecases.video_get import GetVideoUseCase
 from flasco.usecases.video_list import VideoListUseCase
@@ -27,6 +30,9 @@ def get_supabase_service() -> SupabaseStorage:
     return SupabaseStorage(
         bucket=settings.SUPABASE_BUCKET,
     )
+    
+def swagger_security(credentials: HTTPAuthorizationCredentials = Depends(HTTPBearer(auto_error=False))):
+    return credentials
 
 
 def get_video_repository(
@@ -104,6 +110,20 @@ def delete_favorite_modulo_usecase(
 ) -> DeleteModuloUseCase:
     return DeleteModuloUseCase(favorito_repository=favorito_repository)
 
+def get_all_modulos_usecase(
+    modulo_repository: ModuloRepository = Depends(modulo_repository),
+) -> GetAllModulosUseCase:
+    return GetAllModulosUseCase(modulo_repository=modulo_repository)
+
+
+def get_favorited_modulos_usecase(
+    modulo_repository: ModuloRepository = Depends(modulo_repository),
+    favorito_repository: FavoritoRepository = Depends(favorito_repository),
+) -> GetFavoritedModulosUseCase:
+    return GetFavoritedModulosUseCase(
+        modulo_repository=modulo_repository,
+        favorito_repository=favorito_repository
+    )
 
 def video_upload_usecase(
     video_repository: VideoRepository = Depends(get_video_repository),

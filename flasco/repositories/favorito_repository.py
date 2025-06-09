@@ -1,3 +1,5 @@
+from sqlalchemy import select
+import uuid
 from sqlalchemy import delete
 from flasco.models.favorita_um import FavoritaUm
 from flasco.repositories.base_repository import BaseRepository
@@ -16,3 +18,10 @@ class FavoritoRepository(BaseRepository):
 
         await self.db_session.execute(stmt)
         await self.db_session.commit()
+        
+    async def get_favorited_module_ids_by_user(
+        self, user_id: uuid.UUID
+    ) -> list[uuid.UUID]:
+        stmt = select(self.model.id_modulo).where(self.model.id_usuario == user_id)
+        result = await self.db_session.execute(stmt)
+        return result.scalars().all()

@@ -1,3 +1,4 @@
+import uuid
 from pydantic import BaseModel
 
 
@@ -14,3 +15,8 @@ class FavoriteModuloDTO(BaseModel):
 class FavoriteModuloResponseDTO(BaseModel):
     status: str
     message: str
+    
+class GetModuloDTO(BaseModel):
+    id_modulo: uuid.UUID
+    nome: str
+    descricao: str
