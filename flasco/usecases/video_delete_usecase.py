@@ -1,17 +1,11 @@
-from datetime import time
 from http import HTTPStatus
-import select
-import uuid
 
 from fastapi import HTTPException
-from flasco.database import database
-from flasco.database.database import AsyncSessionLocal
 from flasco.database.filestorage import SupabaseStorage
-from flasco.models.video import Video
 from flasco.repositories.video_repository import VideoRepository
 
 
-class DeleteVideoUseCase: 
+class DeleteVideoUseCase:
     def __init__(
         self,
         supabase_service: SupabaseStorage,

@@ -13,6 +13,8 @@ from flasco.usecases.auth.create_user_professor import (
 )
 from flasco.usecases.auth.login import LoginUseCase
 from flasco.usecases.modulo.create_modulo_usecase import CreateModuloUseCase
+from flasco.usecases.modulo.delete_modulo_usecase import DeleteModuloUseCase
+from flasco.usecases.modulo.favorite_modulo import FavoriteModuloUseCase
 from flasco.usecases.video_delete_usecase import DeleteVideoUseCase
 from flasco.usecases.video_get import GetVideoUseCase
 from flasco.usecases.video_list import VideoListUseCase
@@ -86,7 +88,21 @@ def login_usecase(
 def create_modulo_usecase(
     modulo_repository: ModuloRepository = Depends(modulo_repository),
 ) -> CreateModuloUseCase:
-    return CreateModuloUseCase(modulo_respoitory=modulo_repository)
+    return CreateModuloUseCase(modulo_respository=modulo_repository)
+
+
+def favorite_module_usecase(
+    favorito_repository: FavoritoRepository = Depends(favorito_repository),
+) -> FavoriteModuloUseCase:
+    return FavoriteModuloUseCase(
+        favorito_repository=favorito_repository
+    )
+
+
+def delete_favorite_modulo_usecase(
+    favorito_repository: FavoritoRepository = Depends(favorito_repository),
+) -> DeleteModuloUseCase:
+    return DeleteModuloUseCase(favorito_repository=favorito_repository)
 
 
 def video_upload_usecase(
