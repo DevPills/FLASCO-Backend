@@ -15,7 +15,7 @@ class BaseRepository:
         db_item_data = self.model(**item.model_dump())
         self.db_session.add(db_item_data)
         await self.db_session.commit()
-        await self.de_session.refresh(db_item_data)
+        await self.db_session.refresh(db_item_data)
 
         return db_item_data
 
@@ -41,7 +41,7 @@ class BaseRepository:
         return result
 
     async def delete(self, item_id: str):
-        stmt = delete(self.model).where(self.model.id == int(item_id))
+        stmt = delete(self.model).where(self.model.id == item_id)
 
         await self.db_session.execute(stmt)
         await self.db_session.commit()

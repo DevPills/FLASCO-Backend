@@ -1,15 +1,14 @@
 from fastapi import HTTPException
 from flasco.application.dtos.modulo_dto import ModuloDTO
-from flasco.models.modulo import Modulo
 from flasco.repositories.modulo_repository import ModuloRepository
 
 
 class CreateModuloUseCase:
     def __init__(
         self,
-        modulo_respoitory: ModuloRepository
+        modulo_respository: ModuloRepository
     ):
-        self.modulo_repository = modulo_respoitory
+        self.modulo_repository = modulo_respository
 
     async def execute(self, modulo: ModuloDTO, current_user_id: str) -> None:
         try:
