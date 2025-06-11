@@ -45,16 +45,19 @@ def do_run_migrations(connection):
 
 
 async def run_migrations_online() -> None:
-    """Run migrations in 'online' mode with asyncpg."""
+    """Run migrations in 'online' mode with asyncpg and SSL."""
     connectable = create_async_engine(
         settings.DATABASE_URL,
         poolclass=pool.NullPool,
+        connect_args={"sslmode": "require"},
+        echo=True,
     )
 
     async with connectable.connect() as connection:
         await connection.run_sync(do_run_migrations)
 
     await connectable.dispose()
+
 
 
 if context.is_offline_mode():
