@@ -8,6 +8,7 @@ from flasco.repositories.modulo_repository import ModuloRepository
 from flasco.repositories.professor_repository import ProfessorRepository
 from flasco.repositories.usuario_repository import UsuarioRepository
 from flasco.repositories.video_repository import VideoRepository
+from flasco.repositories.comentario_repository import ComentarioRepository
 from flasco.usecases.auth.create_user_aluno import CreateUserAlunoUseCase
 from flasco.usecases.auth.create_user_professor import (
     CreateUserProfessorUseCase
@@ -22,6 +23,9 @@ from flasco.usecases.video_delete_usecase import DeleteVideoUseCase
 from flasco.usecases.video_get import GetVideoUseCase
 from flasco.usecases.video_list import VideoListUseCase
 from flasco.usecases.video_upload import VideoUploadUseCase
+from flasco.usecases.comentario.get_comentarios_by_video import GetComentariosByVideo
+from flasco.usecases.comentario.create_comentario import CreateComentarioUseCase
+
 from sqlalchemy.ext.asyncio import AsyncSession
 from flasco.settings import settings
 
@@ -69,6 +73,11 @@ def favorito_repository(
     session: AsyncSession = Depends(get_async_session),
 ) -> FavoritoRepository:
     return FavoritoRepository(db_session=session)
+
+def comentario_repository(
+    session: AsyncSession = Depends(get_async_session),
+) -> ComentarioRepository:
+    return ComentarioRepository(db_session=session)
 
 
 def create_professor_user_usecase(
@@ -163,3 +172,14 @@ def list_video_usecase(
         supabase_service=supabase_service,
         video_repository=video_repository
     )
+
+def create_comentario_usecase(
+    comentario_repo: ComentarioRepository = Depends(comentario_repository),
+) -> CreateComentarioUseCase:
+    return CreateComentarioUseCase(repository=comentario_repo)
+
+
+def get_comentarios_by_video_usecase(
+    comentario_repo: ComentarioRepository = Depends(comentario_repository),
+) -> GetComentariosByVideo:
+    return GetComentariosByVideo(comentario_repository=comentario_repo)
