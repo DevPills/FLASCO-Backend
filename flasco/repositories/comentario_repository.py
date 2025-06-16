@@ -1,5 +1,6 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
+from sqlalchemy.orm import selectinload 
 from flasco.models.comentario import Comentario
 from flasco.application.dtos.comentario_dto import ComentarioDTO
 from typing import List, Optional
@@ -23,7 +24,11 @@ class ComentarioRepository(BaseRepository):
 
 
     async def get_comentarios_by_video_id(self, video_id: str) -> List[Comentario]:
-        stmt = select(Comentario).where(Comentario.id_video == video_id)
+        stmt = (
+            select(Comentario)
+            .where(Comentario.id_video == video_id)
+            .options(selectinload(Comentario.usuario))  # <- carrega o usuário relacionado
+        )
         result = await self.db_session.execute(stmt)
         return result.scalars().all()
     
