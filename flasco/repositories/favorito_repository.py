@@ -18,7 +18,7 @@ class FavoritoRepository(BaseRepository):
 
         await self.db_session.execute(stmt)
         await self.db_session.commit()
-        
+
     async def get_favorited_module_ids_by_user(
         self, user_id: uuid.UUID
     ) -> list[uuid.UUID]:
