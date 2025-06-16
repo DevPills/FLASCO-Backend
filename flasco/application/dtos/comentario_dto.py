@@ -16,4 +16,4 @@ class ComentarioResponseDTO(BaseModel):
     id_usuario: UUID
     id_video: UUID
     id_resposta: Optional[UUID] = None
-
+    nome_usuario: str
