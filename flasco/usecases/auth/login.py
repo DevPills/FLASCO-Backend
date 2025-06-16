@@ -1,5 +1,4 @@
 from fastapi import HTTPException, status
-
 from flasco.application.dtos.auth_dto import LoginDTO
 from flasco.application.utils.auth import verify_password
 from flasco.infra.services.jwt_token_service import create_access_token
@@ -33,8 +32,15 @@ class LoginUseCase:
                 "user_id": str(user_registered.id_usuario)
             })
 
+        role = "PROFESSOR" if user_registered.professor else "ALUNO"
         return {
             "status": "sucesso",
             "mensagem": "Usuário logado com sucesso",
-            "access_token": access_token
+            "access_token": access_token,
+            "user": {
+                "id": str(user_registered.id_usuario),
+                "nome": user_registered.nome,
+                "email": user_registered.email,
+                "role": role,
+            },
         }

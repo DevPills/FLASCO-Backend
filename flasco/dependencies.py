@@ -14,6 +14,7 @@ from flasco.usecases.auth.create_user_aluno import CreateUserAlunoUseCase
 from flasco.usecases.auth.create_user_professor import (
     CreateUserProfessorUseCase
 )
+from flasco.usecases.auth.delete_user import DeleteUserUseCase
 from flasco.usecases.auth.login import LoginUseCase
 from flasco.usecases.dislike_video import DislikeVideoUseCase
 from flasco.usecases.like_video import LikeVideoUseCase
@@ -111,6 +112,10 @@ def create_aluno_user_usecase(
 ) -> CreateUserAlunoUseCase:
     return CreateUserAlunoUseCase(aluno_repository=aluno_repository)
 
+def delete_user_usecase(
+    usuario_repository: UsuarioRepository = Depends(usuario_repository),
+) -> DeleteUserUseCase:
+    return DeleteUserUseCase(usuario_repository=usuario_repository)
 
 def login_usecase(
     user_repository: UsuarioRepository = Depends(usuario_repository),
