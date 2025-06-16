@@ -3,6 +3,7 @@ from flasco.database.filestorage import SupabaseStorage
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from flasco.database.database import get_async_session
 from flasco.repositories.aluno_repository import AlunoRepository
+from flasco.repositories.curte_um_repository import CurteUmRepository
 from flasco.repositories.favorito_repository import FavoritoRepository
 from flasco.repositories.modulo_repository import ModuloRepository
 from flasco.repositories.professor_repository import ProfessorRepository
@@ -13,11 +14,17 @@ from flasco.usecases.auth.create_user_professor import (
     CreateUserProfessorUseCase
 )
 from flasco.usecases.auth.login import LoginUseCase
+from flasco.usecases.dislike_video import DislikeVideoUseCase
+from flasco.usecases.like_video import LikeVideoUseCase
 from flasco.usecases.modulo.create_modulo_usecase import CreateModuloUseCase
 from flasco.usecases.modulo.delete_modulo_usecase import DeleteModuloUseCase
-from flasco.usecases.modulo.favorite_modulo_usecase import FavoriteModuloUseCase
+from flasco.usecases.modulo.favorite_modulo_usecase import (
+    FavoriteModuloUseCase
+)
 from flasco.usecases.modulo.get_all_modulos_usecase import GetAllModulosUseCase
-from flasco.usecases.modulo.get_favorited_modulos_usecase import GetFavoritedModulosUseCase
+from flasco.usecases.modulo.get_favorited_modulos_usecase import (
+    GetFavoritedModulosUseCase
+)
 from flasco.usecases.video_delete_usecase import DeleteVideoUseCase
 from flasco.usecases.video_get import GetVideoUseCase
 from flasco.usecases.video_list import VideoListUseCase
@@ -30,8 +37,13 @@ def get_supabase_service() -> SupabaseStorage:
     return SupabaseStorage(
         bucket=settings.SUPABASE_BUCKET,
     )
-    
-def swagger_security(credentials: HTTPAuthorizationCredentials = Depends(HTTPBearer(auto_error=False))):
+
+
+def swagger_security(
+        credentials: HTTPAuthorizationCredentials = Depends(
+            HTTPBearer(auto_error=False)
+        )
+):
     return credentials
 
 
@@ -69,6 +81,12 @@ def favorito_repository(
     session: AsyncSession = Depends(get_async_session),
 ) -> FavoritoRepository:
     return FavoritoRepository(db_session=session)
+
+
+def curte_um_repository(
+    session: AsyncSession = Depends(get_async_session),
+) -> CurteUmRepository:
+    return CurteUmRepository(db_session=session)
 
 
 def create_professor_user_usecase(
@@ -110,6 +128,7 @@ def delete_favorite_modulo_usecase(
 ) -> DeleteModuloUseCase:
     return DeleteModuloUseCase(favorito_repository=favorito_repository)
 
+
 def get_all_modulos_usecase(
     modulo_repository: ModuloRepository = Depends(modulo_repository),
 ) -> GetAllModulosUseCase:
@@ -124,6 +143,7 @@ def get_favorited_modulos_usecase(
         modulo_repository=modulo_repository,
         favorito_repository=favorito_repository
     )
+
 
 def video_upload_usecase(
     video_repository: VideoRepository = Depends(get_video_repository),
@@ -162,4 +182,20 @@ def list_video_usecase(
     return VideoListUseCase(
         supabase_service=supabase_service,
         video_repository=video_repository
+    )
+
+
+def like_video_usecase(
+    curte_um_repository: CurteUmRepository = Depends(curte_um_repository),
+) -> LikeVideoUseCase:
+    return LikeVideoUseCase(
+        curte_um_repository=curte_um_repository
+    )
+
+
+def dislike_video_usecase(
+    curte_um_repository: CurteUmRepository = Depends(curte_um_repository),
+) -> DislikeVideoUseCase:
+    return DislikeVideoUseCase(
+        curte_um_repository=curte_um_repository
     )
