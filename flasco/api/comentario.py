@@ -2,10 +2,12 @@ from fastapi import APIRouter, Depends, Request, status
 from flasco.application.dtos.comentario_dto import ComentarioDTO, ComentarioResponseDTO
 from flasco.usecases.comentario.create_comentario import CreateComentarioUseCase
 from flasco.usecases.comentario.get_comentarios_by_video import GetComentariosByVideo
+from flasco.usecases.comentario.delete_comentario import DeleteComentarioUseCase
 from flasco.infra.middleware.verification_token_middleware import verification_token
 from flasco.dependencies import (
     create_comentario_usecase,
     get_comentarios_by_video_usecase,
+    delete_comentario_usecase,
     swagger_security,
 )
 
@@ -38,3 +40,15 @@ async def get_comentarios_video(
 ):
     comentarios = await usecase.execute(id_video)
     return comentarios
+
+
+@router.delete("/{id_comentario}", status_code=status.HTTP_204_NO_CONTENT)
+@verification_token
+async def delete_comentario(
+    id_comentario: str,
+    request: Request,
+    usecase: DeleteComentarioUseCase = Depends(delete_comentario_usecase)
+):
+    current_user = request.state.user
+
+    await usecase.execute(id_comentario, current_user.user_id)

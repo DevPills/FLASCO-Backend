@@ -32,6 +32,7 @@ from flasco.usecases.video_list import VideoListUseCase
 from flasco.usecases.video_upload import VideoUploadUseCase
 from flasco.usecases.comentario.get_comentarios_by_video import GetComentariosByVideo
 from flasco.usecases.comentario.create_comentario import CreateComentarioUseCase
+from flasco.usecases.comentario.delete_comentario import DeleteComentarioUseCase
 
 from sqlalchemy.ext.asyncio import AsyncSession
 from flasco.settings import settings
@@ -203,6 +204,11 @@ def get_comentarios_by_video_usecase(
     comentario_repo: ComentarioRepository = Depends(comentario_repository),
 ) -> GetComentariosByVideo:
     return GetComentariosByVideo(comentario_repository=comentario_repo)
+
+def delete_comentario_usecase(
+    comentario_repo: ComentarioRepository = Depends(comentario_repository),
+) -> DeleteComentarioUseCase:
+    return DeleteComentarioUseCase(comentario_repository=comentario_repo)
 
 def like_video_usecase(
     curte_um_repository: CurteUmRepository = Depends(curte_um_repository),
