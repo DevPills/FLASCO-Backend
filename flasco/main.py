@@ -19,6 +19,7 @@ app.include_router(enum_router)
 app.include_router(comentario_router)
 
 origins = [
+    "https://flasco.dev.br"
     "http://localhost:3000/",
 ]
 
