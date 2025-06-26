@@ -14,7 +14,8 @@ class GetComentariosByVideo:
                 "conteudo": comentario.conteudo,
                 "id_usuario": comentario.id_usuario,
                 "id_video": comentario.id_video,
-                "id_resposta": comentario.id_resposta
+                "id_resposta": comentario.id_resposta,
+                "nome_usuario": comentario.usuario.nome
             })
             for comentario in comentarios
         ]
