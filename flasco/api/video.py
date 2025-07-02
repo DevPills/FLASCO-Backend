@@ -85,14 +85,19 @@ async def get_video_url(
     )
 
 
-@router.get("/list")
+@router.get("/list/{modulo_id}", status_code=status.HTTP_200_OK)
 async def list_videos(
     request: Request,
+    modulo_id: str,
     limit: int | None = Query(None, ge=1, description="Máximo de itens"),
     offset: int = Query(0, ge=0, description="Deslocamento inicial"),
     usecase: VideoListUseCase = Depends(list_video_usecase)
 ):
-    videos = await usecase.execute(limit=limit, offset=offset)
+    videos = await usecase.execute(
+        limit=limit,
+        offset=offset,
+        modulo_id=modulo_id
+    )
     return {
         "status": "success",
         "items": len(videos),
