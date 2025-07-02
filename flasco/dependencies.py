@@ -16,6 +16,7 @@ from flasco.usecases.auth.create_user_professor import (
 )
 from flasco.usecases.auth.delete_user import DeleteUserUseCase
 from flasco.usecases.auth.login import LoginUseCase
+from flasco.usecases.comentario.update_comentario import UpdateComentarioUseCase
 from flasco.usecases.dislike_video import DislikeVideoUseCase
 from flasco.usecases.like_video import LikeVideoUseCase
 from flasco.usecases.modulo.create_modulo_usecase import CreateModuloUseCase
@@ -88,6 +89,7 @@ def favorito_repository(
 ) -> FavoritoRepository:
     return FavoritoRepository(db_session=session)
 
+
 def comentario_repository(
     session: AsyncSession = Depends(get_async_session),
 ) -> ComentarioRepository:
@@ -113,10 +115,12 @@ def create_aluno_user_usecase(
 ) -> CreateUserAlunoUseCase:
     return CreateUserAlunoUseCase(aluno_repository=aluno_repository)
 
+
 def delete_user_usecase(
     usuario_repository: UsuarioRepository = Depends(usuario_repository),
 ) -> DeleteUserUseCase:
     return DeleteUserUseCase(usuario_repository=usuario_repository)
+
 
 def login_usecase(
     user_repository: UsuarioRepository = Depends(usuario_repository),
@@ -199,6 +203,7 @@ def list_video_usecase(
         video_repository=video_repository
     )
 
+
 def create_comentario_usecase(
     comentario_repo: ComentarioRepository = Depends(comentario_repository),
 ) -> CreateComentarioUseCase:
@@ -210,10 +215,18 @@ def get_comentarios_by_video_usecase(
 ) -> GetComentariosByVideo:
     return GetComentariosByVideo(comentario_repository=comentario_repo)
 
+
 def delete_comentario_usecase(
     comentario_repo: ComentarioRepository = Depends(comentario_repository),
 ) -> DeleteComentarioUseCase:
     return DeleteComentarioUseCase(comentario_repository=comentario_repo)
+
+
+def update_comentario_usecase(
+    comentario_repo: ComentarioRepository = Depends(comentario_repository),
+) -> UpdateComentarioUseCase:
+    return UpdateComentarioUseCase(comentario_repository=comentario_repo)
+
 
 def like_video_usecase(
     curte_um_repository: CurteUmRepository = Depends(curte_um_repository),

@@ -9,13 +9,16 @@ from flasco.dependencies import (
     get_comentarios_by_video_usecase,
     delete_comentario_usecase,
     swagger_security,
+    update_comentario_usecase,
 )
+from flasco.usecases.comentario.update_comentario import UpdateComentarioUseCase
 
 router = APIRouter(
     prefix="/comentario",
     tags=["Cometario"],
     dependencies=[Depends(swagger_security)]
 )
+
 
 @router.post("/create", status_code=status.HTTP_201_CREATED)
 @verification_token
@@ -28,10 +31,11 @@ async def create_comentario(
     comentario_data.id_usuario = current_user.user_id
 
     comentario_criado = await usecase.execute(comentario_data)
-    return{
+    return {
         "status": "sucesso",
         "comentario": comentario_criado
     }
+
 
 @router.get("/video/{id_video}", response_model=list[ComentarioResponseDTO])
 async def get_comentarios_video(
@@ -52,3 +56,16 @@ async def delete_comentario(
     current_user = request.state.user
 
     await usecase.execute(id_comentario, current_user.user_id)
+
+
+@router.put("/update/{id_comentario}")
+@verification_token
+async def update_comentario(
+    id_comentario: str,
+    new_comentario: str,
+    request: Request,
+    usecase: UpdateComentarioUseCase = Depends(update_comentario_usecase),
+):
+    new_comentario = await usecase.execute(id_comentario, new_comentario)
+    return new_comentario
+     
