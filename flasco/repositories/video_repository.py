@@ -4,6 +4,7 @@ from sqlalchemy import delete, select
 from sqlalchemy.ext.asyncio import AsyncSession
 from typing import TypeVar
 
+from flasco.models.armazena_um import ArmazenaUm
 from flasco.models.video import Video
 
 
@@ -43,10 +44,12 @@ class VideoRepository:
             return None
         return video
 
-    async def get_all_videos(self) -> list[T]:
-        query = select(Video)
+    async def get_all_videos(self, modulo_id: str) -> list[T]:
+        query = (
+            select(Video)
+            .join(ArmazenaUm, Video.id_video == ArmazenaUm.id_video)
+            .where(ArmazenaUm.id_modulo == modulo_id)
+        )
         result = await self.db_session.execute(query)
         videos = result.scalars().all()
-        if not videos:
-            return []
         return videos
