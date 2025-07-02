@@ -1,9 +1,12 @@
+from typing import TYPE_CHECKING
 from uuid import UUID
 from sqlalchemy import ForeignKey, Integer
 from sqlalchemy.orm import mapped_column, Mapped, relationship
 from flasco.models.base import Base
-from flasco.models.video import Video
-from flasco.models.modulo import Modulo
+
+if TYPE_CHECKING:
+    from flasco.models.video import Video
+    from flasco.models.modulo import Modulo
 
 
 class ArmazenaUm(Base):

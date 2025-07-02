@@ -3,6 +3,7 @@ from fastapi import (
     APIRouter,
     Depends,
     File,
+    Form,
     Query,
     Request,
     UploadFile,
@@ -37,12 +38,14 @@ async def upload_video(
     request: Request,
     video_name: str = File(...),
     video_file: UploadFile = File(...),
+    modulo_id: str = Form(...),
     usecase: VideoUploadUseCase = Depends(video_upload_usecase)
 ):
     contents = await video_file.read()
     response = await usecase.execute(
         video_name=video_name,
         contents=contents,
+        modulo_id=modulo_id
     )
     return response
 
