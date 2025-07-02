@@ -19,13 +19,13 @@ app.include_router(enum_router)
 app.include_router(comentario_router)
 
 origins = [
-    "https://flasco.dev.br"
+    "https://flasco.dev.br",
     "http://localhost:3000/",
 ]
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=['*'],
+    allow_origins=origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
