@@ -29,3 +29,7 @@ class UsuarioRepository(BaseRepository):
         await self.db_session.delete(user)
         await self.db_session.commit()
         return True
+    
+    async def get_user_by_id(self, id_usuario: uuid.UUID) -> Usuario | None:
+        return await self.db_session.get(Usuario, id_usuario)
+

@@ -16,6 +16,7 @@ from flasco.usecases.auth.create_user_professor import (
     CreateUserProfessorUseCase
 )
 from flasco.usecases.auth.delete_user import DeleteUserUseCase
+from flasco.usecases.auth.get_user_by_id import GetUserByIdUseCase
 from flasco.usecases.auth.login import LoginUseCase
 from flasco.usecases.dislike_video import DislikeVideoUseCase
 from flasco.usecases.like_video import LikeVideoUseCase
@@ -220,11 +221,20 @@ def list_video_usecase(
     )
 
 
+def get_usuario_by_id_usecase(
+    usuario_repo: UsuarioRepository = Depends(usuario_repository),
+) -> GetUserByIdUseCase:
+    return GetUserByIdUseCase(repository=usuario_repo)
+
+
 def create_comentario_usecase(
     comentario_repo: ComentarioRepository = Depends(comentario_repository),
+    usuario_uc: GetUserByIdUseCase = Depends(get_usuario_by_id_usecase),
 ) -> CreateComentarioUseCase:
-    return CreateComentarioUseCase(repository=comentario_repo)
-
+    return CreateComentarioUseCase(
+        comentario_repository=comentario_repo,
+        get_usuario_by_id_usecase=usuario_uc,
+    )
 
 def get_comentarios_by_video_usecase(
     comentario_repo: ComentarioRepository = Depends(comentario_repository),
