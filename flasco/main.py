@@ -20,7 +20,7 @@ app.include_router(comentario_router)
 
 origins = [
     "https://flasco.dev.br",
-    "http://localhost:3000/",
+    "http://localhost:3000",
 ]
 
 app.add_middleware(
