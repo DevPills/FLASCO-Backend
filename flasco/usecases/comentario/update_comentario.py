@@ -11,12 +11,11 @@ class UpdateComentarioUseCase:
     async def execute(self, id_comentario: str, new_comentario: str): 
 
         try:
-            await self.comentario_repository.update(
+            await self.comentario_repository.update_comentario(
                 id_comentario=id_comentario,
                 new_comentario=new_comentario
             )
-
         except Exception as e:
             raise ValueError(
-                f"Nao foi possivel modificar o comentario"
+                "Nao foi possivel modificar o comentario"
             )

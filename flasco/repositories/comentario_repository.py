@@ -48,7 +48,7 @@ class ComentarioRepository(BaseRepository):
         return result.scalars().all()
     
 
-    async def update(self, comentario_id: str, new_comentario: str): 
+    async def update_comentario(self, comentario_id: str, new_comentario: str): 
 
         stmt = (
             update(self.model)
