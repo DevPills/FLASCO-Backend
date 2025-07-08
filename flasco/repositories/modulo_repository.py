@@ -14,9 +14,9 @@ class ModuloRepository(BaseRepository):
 
     async def create(self, dto: ModuloDTO) -> Modulo:
         modulo = Modulo(
-            nome = dto.nome,
-            descricao = dto.descricao,
-            id_professor_criador = dto.id_professor_criador
+            nome=dto.nome,
+            descricao=dto.descricao,
+            id_professor_criador=dto.id_professor_criador
         )
 
         self.db_session.add(modulo)

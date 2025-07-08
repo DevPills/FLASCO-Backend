@@ -11,8 +11,14 @@ class VideoListUseCase:
         self.video_service = supabase_service
         self.video_repository = video_repository
 
-    async def execute(self, limit: int | None = None, offset: int = 0):
-
-        videos = await self.video_repository.get_all_videos()
+    async def execute(
+        self,
+        limit: int | None = None,
+        offset: int = 0,
+        modulo_id: str | None = None,
+    ):
+        videos = await self.video_repository.get_all_videos(
+            modulo_id=modulo_id
+        )
 
         return videos

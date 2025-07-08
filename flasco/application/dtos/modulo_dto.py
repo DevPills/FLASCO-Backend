@@ -15,8 +15,15 @@ class FavoriteModuloDTO(BaseModel):
 class FavoriteModuloResponseDTO(BaseModel):
     status: str
     message: str
-    
+
+
 class GetModuloDTO(BaseModel):
     id_modulo: uuid.UUID
     nome: str
     descricao: str
+
+
+class ArmazenaUmDTO(BaseModel):
+    id_video: uuid.UUID
+    id_modulo: uuid.UUID
+    posicao: int

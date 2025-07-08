@@ -47,7 +47,6 @@ class ComentarioRepository(BaseRepository):
         result = await self.db_session.execute(stmt)
         return result.scalars().all()
     
-
     async def update_comentario(self, comentario_id: str, new_comentario: str): 
 
         stmt = (
