@@ -29,6 +29,9 @@ from flasco.usecases.modulo.get_all_modulos_usecase import GetAllModulosUseCase
 from flasco.usecases.modulo.get_favorited_modulos_usecase import (
     GetFavoritedModulosUseCase
 )
+from flasco.usecases.user.get_current_user_details_usecase import (
+    GetCurrentUserDetailsUseCase
+)
 from flasco.usecases.video_delete_usecase import DeleteVideoUseCase
 from flasco.usecases.video_get import GetVideoUseCase
 from flasco.usecases.video_list import VideoListUseCase
@@ -261,4 +264,12 @@ def dislike_video_usecase(
 ) -> DislikeVideoUseCase:
     return DislikeVideoUseCase(
         curte_um_repository=curte_um_repository
+    )
+
+
+def current_user_details_usecase(
+    usuario_repository: UsuarioRepository = Depends(usuario_repository),
+) -> GetCurrentUserDetailsUseCase:
+    return GetCurrentUserDetailsUseCase(
+        user_repository=usuario_repository
     )

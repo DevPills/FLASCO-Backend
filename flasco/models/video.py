@@ -9,7 +9,6 @@ if TYPE_CHECKING:
     from flasco.models.armazena_um import ArmazenaUm
     from flasco.models.comentario import Comentario
     from flasco.models.curte_um import CurteUm
-    from flasco.models.favorita_um import FavoritaUm
     from flasco.models.anexo import Anexo
 
 

@@ -10,7 +10,6 @@ if TYPE_CHECKING:
     from flasco.models.comentario import Comentario
     from flasco.models.favorita_um import FavoritaUm
     from flasco.models.curte_um import CurteUm
-    from flasco.models.se_matricula import SeMatricula
 
 
 class Usuario(Base):
@@ -62,4 +61,3 @@ class Usuario(Base):
         back_populates="usuario",
         cascade="all, delete-orphan",
     )
-
