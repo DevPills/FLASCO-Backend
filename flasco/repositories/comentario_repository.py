@@ -1,11 +1,13 @@
+from datetime import datetime
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select, delete, or_
-from sqlalchemy.orm import selectinload 
+from sqlalchemy import select, delete, or_, update
+from sqlalchemy.orm import selectinload
 from flasco.models.comentario import Comentario
 from flasco.models.video import Video
 from flasco.application.dtos.comentario_dto import ComentarioDTO
 from typing import List, Optional
 from flasco.repositories.base_repository import BaseRepository
+
 
 class ComentarioRepository(BaseRepository):
     def __init__(self, db_session: AsyncSession):
@@ -17,7 +19,7 @@ class ComentarioRepository(BaseRepository):
         await self.db_session.commit()
         await self.db_session.refresh(comentario)
         return comentario
-    
+
     async def delete_comentario(self, id_comentario: str, id_usuario: str):
         stmt = delete(Comentario).where(
             (Comentario.id_comentario == id_comentario),
@@ -29,20 +31,35 @@ class ComentarioRepository(BaseRepository):
         await self.db_session.execute(stmt)
         await self.db_session.commit()
 
-
     async def get_by_id(self, comentario_id: str) -> Optional[Comentario]:
-        stmt = select(Comentario).where(Comentario.id_comentario == comentario_id)
+        stmt = select(Comentario).where(
+            Comentario.id_comentario == comentario_id
+        )
         result = await self.db_session.execute(stmt)
         return result.scalars().first()
 
-
-    async def get_comentarios_by_video_id(self, video_id: str) -> List[Comentario]:
+    async def get_comentarios_by_video_id(
+        self,
+        video_id: str
+    ) -> List[Comentario]:
         stmt = (
             select(Comentario)
             .where(Comentario.id_video == video_id)
-            .options(selectinload(Comentario.usuario))  # <- carrega o usuário relacionado
+            .options(selectinload(Comentario.usuario))
         )
         result = await self.db_session.execute(stmt)
         return result.scalars().all()
-    
 
+    async def update_comentario(self, comentario_id: str, new_comentario: str):
+
+        stmt = (
+            update(Comentario)
+            .where(Comentario.id_comentario == comentario_id)
+            .values(
+                conteudo=new_comentario,
+                updated_at=datetime.utcnow()
+            )
+        )
+
+        await self.db_session.execute(stmt)
+        await self.db_session.commit()
