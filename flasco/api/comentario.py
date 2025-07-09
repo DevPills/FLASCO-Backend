@@ -1,9 +1,21 @@
 from fastapi import APIRouter, Depends, Request, status
-from flasco.application.dtos.comentario_dto import ComentarioDTO, ComentarioResponseDTO
-from flasco.usecases.comentario.create_comentario import CreateComentarioUseCase
-from flasco.usecases.comentario.get_comentarios_by_video import GetComentariosByVideo
-from flasco.usecases.comentario.delete_comentario import DeleteComentarioUseCase
-from flasco.infra.middleware.verification_token_middleware import verification_token
+from flasco.application.dtos.comentario_dto import (
+    ComentarioDTO,
+    ComentarioResponseDTO,
+    UpdateComentarioDTO
+)
+from flasco.usecases.comentario.create_comentario import (
+    CreateComentarioUseCase
+)
+from flasco.usecases.comentario.get_comentarios_by_video import (
+    GetComentariosByVideo
+)
+from flasco.usecases.comentario.delete_comentario import (
+    DeleteComentarioUseCase
+)
+from flasco.infra.middleware.verification_token_middleware import (
+    verification_token
+)
 from flasco.dependencies import (
     create_comentario_usecase,
     get_comentarios_by_video_usecase,
@@ -11,7 +23,9 @@ from flasco.dependencies import (
     swagger_security,
     update_comentario_usecase,
 )
-from flasco.usecases.comentario.update_comentario import UpdateComentarioUseCase
+from flasco.usecases.comentario.update_comentario import (
+    UpdateComentarioUseCase
+)
 
 router = APIRouter(
     prefix="/comentario",
@@ -58,14 +72,13 @@ async def delete_comentario(
     await usecase.execute(id_comentario, current_user.user_id)
 
 
-@router.put("/update/{id_comentario}")
+@router.put("/update/{id_comentario}", status_code=status.HTTP_204_NO_CONTENT)
 @verification_token
 async def update_comentario(
     id_comentario: str,
-    new_comentario: str,
+    new_comentario: UpdateComentarioDTO,
     request: Request,
     usecase: UpdateComentarioUseCase = Depends(update_comentario_usecase),
 ):
-    new_comentario = await usecase.execute(id_comentario, new_comentario)
-    return new_comentario
-     
+    response = await usecase.execute(id_comentario, new_comentario)
+    return response
