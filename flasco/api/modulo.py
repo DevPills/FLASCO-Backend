@@ -2,6 +2,7 @@ from typing import List
 from fastapi import APIRouter, Depends, Request, status
 
 from flasco.application.dtos.modulo_dto import (
+    CreateModuloDTO,
     ModuloDTO,
     FavoriteModuloResponseDTO
 )
@@ -34,12 +35,15 @@ async def create_modulo(
     create_modulo_usecase: CreateModuloUseCase = Depends(create_modulo_usecase)
 ):
     current_user = request.state.user
-    response = await create_modulo_usecase.execute(
-        modulo_data,
-        current_user_id=current_user.user_id
-    )
-    return response
 
+    modulo_para_criar = CreateModuloDTO(
+        nome=modulo_data.nome,
+        descricao=modulo_data.descricao,
+        id_professor_criador=current_user.user_id
+    )
+
+    response = await create_modulo_usecase.execute(modulo_para_criar)
+    return response
 
 @router.post("/favoritar/{modulo_id}", status_code=status.HTTP_201_CREATED)
 @verification_token
