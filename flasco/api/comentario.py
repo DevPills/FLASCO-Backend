@@ -44,7 +44,10 @@ async def create_comentario(
     current_user = request.state.user
     comentario_data.id_usuario = current_user.user_id
 
-    comentario_criado = await usecase.execute(comentario_data)
+    comentario_criado = await usecase.execute(
+        comentario_data,
+        current_user.email
+    )
     return {
         "status": "sucesso",
         "comentario": comentario_criado

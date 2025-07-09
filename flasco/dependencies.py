@@ -236,10 +236,12 @@ def get_usuario_by_id_usecase(
 def create_comentario_usecase(
     comentario_repo: ComentarioRepository = Depends(comentario_repository),
     usuario_uc: GetUserByIdUseCase = Depends(get_usuario_by_id_usecase),
+    usuario_repo: UsuarioRepository = Depends(usuario_repository),
 ) -> CreateComentarioUseCase:
     return CreateComentarioUseCase(
         comentario_repository=comentario_repo,
         get_usuario_by_id_usecase=usuario_uc,
+        usuario_repository=usuario_repo
     )
 
 
