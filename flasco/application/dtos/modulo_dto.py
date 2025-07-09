@@ -5,7 +5,11 @@ from pydantic import BaseModel
 class ModuloDTO(BaseModel):
     nome: str
     descricao: str
-
+    
+class CreateModuloDTO(BaseModel):
+    nome: str
+    descricao: str
+    id_professor_criador: uuid.UUID
 
 class FavoriteModuloDTO(BaseModel):
     id_modulo: str

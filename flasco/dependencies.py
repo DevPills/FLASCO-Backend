@@ -150,7 +150,7 @@ def login_usecase(
 def create_modulo_usecase(
     modulo_repository: ModuloRepository = Depends(modulo_repository),
 ) -> CreateModuloUseCase:
-    return CreateModuloUseCase(modulo_respository=modulo_repository)
+    return CreateModuloUseCase(modulo_repository=modulo_repository)
 
 
 def favorite_module_usecase(
